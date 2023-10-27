@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C/C++: Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/${fileDirname}/${fileBasenameNoExtension}", // Путь к исполняемому файлу
+            "args": [], // Аргументы командной строки, если необходимо
+            "stopAtEntry": false, // Можно установить в true, чтобы остановиться на точке входа
+            "cwd": "${workspaceFolder}/${fileDirname}", // Рабочий каталог для программы
+            "environment": [],
+            "externalConsole": false, // Если true, откроет внешнюю консоль
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "C/C++: gcc build and debug active file",
+            "miDebuggerPath": "/usr/bin/gdb" // Путь к GDB
+        }
+    ]
+}

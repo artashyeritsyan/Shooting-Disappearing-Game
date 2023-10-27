@@ -50,5 +50,12 @@
         "semaphore": "cpp",
         "stop_token": "cpp",
         "thread": "cpp"
-    }
+    },
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/artash/MyRepo/Shooting-Disappearing-Game/output",
+            "binaryPath": "/home/artash/MyRepo/Shooting-Disappearing-Game/output/Shooting_Disappearing",
+            "binaryArgs": []
+        }
+    ]
 }

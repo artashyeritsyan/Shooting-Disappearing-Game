@@ -4,6 +4,13 @@
 #include <chrono>
 #include <thread>
 
+struct pixel{
+    int x;
+    int y;
+    char symbol;
+    bool isShoot;
+};
+
 const int g_height = 20;
 const int g_width = 10;
 const char g_pixelSymbol = '#';
@@ -43,12 +50,11 @@ void play(WINDOW* win) {
     int ch;
     noecho();
     wrefresh(win);
-
-
-
+    std::thread shooting_thread(shoot, win);
+    
     while(true)
     {
-
+        ch = 0;
         for (int i = 0; i < g_height; i++) {
             for (int j = 0; j < g_width; j++) {
                 g_table[i][j] = '^';
@@ -72,21 +78,20 @@ void play(WINDOW* win) {
                 break;
             case KEY_UP:
                 shoot(win);
-                break;
-            case 'q':
-            case 'Q':
-                endwin();
-        }
-
+                // break;
+            // case 'q':
+            // case 'Q':
+                //endwin();
+        }   
     }
-
+    shooting_thread.join();
 }
 
 void shoot(WINDOW* win) {
     int bulletIndexY = g_height - 3;
     const int bulletIndexX = cursorX;
 
-    while (bulletIndexY >= 0 && g_table[bulletIndexY - 1][bulletIndexX] != g_pixelSymbol) {
+    while (bulletIndexY >= 0 && (g_table[bulletIndexY - 1][bulletIndexX] != g_pixelSymbol)) {
         g_table[bulletIndexY][bulletIndexX] = g_pixelSymbol;
         screenRefresh(win);        
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -96,7 +101,7 @@ void shoot(WINDOW* win) {
     if (rowDestructionCheck(bulletIndexY)) {
         rowDestructor(bulletIndexY);
     }
-    return;
+    //return;
 }
 
 void screenRefresh(WINDOW* win) {
