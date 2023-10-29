@@ -77,7 +77,8 @@ void play(WINDOW* win) {
             }
         }
 
-        //Es masi logiakan tanel zangvaci (table)-i mej
+        
+        // TODO: Es masi logiakan tanel zangvaci (table)-i mej
 
         mvaddch(cursorY, cursorX, g_pixelSymbol);
         g_table[cursorY][cursorX] = g_pixelSymbol;
@@ -85,13 +86,13 @@ void play(WINDOW* win) {
         if(cursorX != g_width - 1)
             g_table[cursorY][cursorX + 1] = g_pixelSymbol;
         if(cursorX != 0)
-            g_table[cursorY][cursorX - 1] = g_pixelSymbol;        
+            g_table[cursorY][cursorX - 1] = g_pixelSymbol;
         
         moveSymbols(destructingRows);
         //usleep(10000); 
 
         screenRefresh(win);   
-    //Nenc anel vor chspasi im inputin
+    //TODO: Nenc anel vor chspasi im inputin
         inputKey = getch();
         switch (inputKey) {
             case KEY_LEFT:
@@ -167,7 +168,7 @@ bool rowDestructionCheck(int row) {
 
 bool rowDestruction(std::array<bool, g_height> &destructingRows) {
     std::array<std::array<char, g_width>, g_height> tempTable = g_table;
-    bool needToRefresh;
+    //bool needToRefresh;
     int endRow = g_height - 3;
 
     for(int rowIndex = 0; rowIndex < g_height - 2; ++rowIndex) {
@@ -180,10 +181,10 @@ bool rowDestruction(std::array<bool, g_height> &destructingRows) {
                 ++j;
             }
             destructingRows[rowIndex] = false;
-            needToRefresh = true;
-            break;
+            //needToRefresh = true;
+            return true;
         }
     }
-
-    return needToRefresh;
+    return false;
+    
 }
