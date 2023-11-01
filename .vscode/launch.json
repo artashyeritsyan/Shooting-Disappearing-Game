@@ -1,14 +1,21 @@
 {
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "C/C++: Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/${fileDirname}/${fileBasenameNoExtension}", // Путь к исполняемому файлу
-            "args": [], // Аргументы командной строки, если необходимо
+            "program": "${workspaceFolder}/Shooting_Disappearing.cpp", // Путь к исполняемому файлу
+            "args": [
+                // "-g", // Добавляем символы отладки
+                // "${file}",
+                // "-o",
+                //"${fileDirname}/${fileBasenameNoExtension}",
+                "-lncurses" // Добавляем опцию для линковки с библиотекой NCurses
+            ],
             "stopAtEntry": false, // Можно установить в true, чтобы остановиться на точке входа
-            "cwd": "${workspaceFolder}/${fileDirname}", // Рабочий каталог для программы
+            "cwd": "Shooting_Disappearing-Game", // Рабочий каталог для программы
             "environment": [],
             "externalConsole": false, // Если true, откроет внешнюю консоль
             "MIMode": "gdb",

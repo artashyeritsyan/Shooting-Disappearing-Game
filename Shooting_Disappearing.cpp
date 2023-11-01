@@ -1,21 +1,23 @@
 #include <array>
 #include <curses.h>
-#include <chrono>
 #include <cstdlib>
 #include <iostream>
 #include <thread>
 
-struct pixel{
+struct pixel
+{
     int x;
     int y;
     char symbol;
     bool isShoot;
 };
 
+bool loose = false;
 const int g_height = 20;
 const int g_width = 10;
-const char g_pixelSymbol = '#';
-const char g_emptySpaceSymbol = '^';
+const char g_pixelSymbol = 'Ա';
+const char g_cursorSymbol = 'Ֆ';
+const char g_emptySpaceSymbol = '.';
 
 int cursorX = g_width / 2;
 int cursorY = g_height - 1;
@@ -23,16 +25,20 @@ std::array<std::array<char, g_width>, g_height> g_table;
 std::array<std::array<bool, g_width>, g_height> g_movingMatrix;
 
 void mainMenu();
-void play(WINDOW* win);
-void moveSymbols(std::array<bool, g_height>& destructingRows);
+void play(WINDOW *win);
+void moveSymbols(std::array<bool, g_height> &destructingRows);
 void shoot();
-void screenRefresh(WINDOW* win);
+void screenRefresh(WINDOW *win);
 bool rowDestructionCheck(int rowIndex);
 bool rowDestruction(std::array<bool, g_height> &destructingRows);
+void shiftMovingMatrixUp(int startRow);
+void shiftMovingMatrixDown();
 void generateRow();
+void looseCheck();
 
-int main() {
-    mainMenu(); 
+int main()
+{
+    mainMenu();
     return 0;
 }
 
@@ -40,7 +46,7 @@ void mainMenu()
 {
     initscr();
     keypad(stdscr, TRUE);
-    WINDOW* win = newwin(g_height, g_width, 0, 0);
+    WINDOW *win = newwin(g_height, g_width, 0, 0);
     wrefresh(win);
 
     curs_set(0);
@@ -50,10 +56,16 @@ void mainMenu()
     endwin();
 }
 
-void play(WINDOW* win) {
-    int counter = 0;
-    std::array<bool, g_height> destructingRows {false};
-    std::string cursor = " # \n###";
+void play(WINDOW *win)
+{
+    int timer = 0;
+    int coolDownTimer = 0;
+    int ShootingCoolDown = 5000;
+    int rowGenerationSpeed = 300000;
+    int bulletFlightTime = 1500;
+    
+    std::array<bool, g_height> destructingRows{false};
+    //std::string cursor = " # \n###";
     int inputKey;
 
     noecho();
@@ -61,8 +73,10 @@ void play(WINDOW* win) {
     nodelay(stdscr, TRUE);
     curs_set(0);
 
-    for (int i = 0; i < g_height; i++) {
-        for (int j = 0; j < g_width; j++) {
+    for (int i = 0; i < g_height; i++)
+    {
+        for (int j = 0; j < g_width; j++)
+        {
             g_table[i][j] = g_emptySpaceSymbol;
         }
     }
@@ -72,94 +86,107 @@ void play(WINDOW* win) {
     //         g_table[i][j] = g_pixelSymbol;
     //     }
     // }
-        
-    while(true)
+
+    while (!loose)
     {
         inputKey = 0;
 
-        if(counter > 100000) {
-            //std::cout << "\n\n\n\n\n\n\n\n\n\n" << counter << "\n\n\n\n\n\n" ;
-            counter = 0;
-           // int position = std::rand() % g_width;
-            //for(int i = 0; i < 100 ; i++)
-            //std::cout << "\n\n\n\n\n\n\n\n\n\n" << position << "\n\n\n\n\n\n" ;
+        if (timer > rowGenerationSpeed)
+        {
+            timer = 0;
+            if(rowGenerationSpeed > 100000)
+            rowGenerationSpeed - 10000;
+
             generateRow();
         }
 
-        if(rowDestruction(destructingRows))
+        if (rowDestruction(destructingRows))
             screenRefresh(win);
 
-        for (int i = 18; i < g_height; i++) {
-            for (int j = 0; j < g_width; j++) {
+        for (int i = 18; i < g_height; i++)
+        {
+            for (int j = 0; j < g_width; j++)
+            {
                 g_table[i][j] = g_emptySpaceSymbol;
             }
         }
 
-        
         // TODO: Es masi logiakan tanel zangvaci (table)-i mej
 
-        mvaddch(cursorY, cursorX, g_pixelSymbol);
-        g_table[cursorY][cursorX] = g_pixelSymbol;
-        g_table[cursorY - 1][cursorX] = g_pixelSymbol;
-        if(cursorX != g_width - 1)
-            g_table[cursorY][cursorX + 1] = g_pixelSymbol;
-        if(cursorX != 0)
-            g_table[cursorY][cursorX - 1] = g_pixelSymbol;
-        
-        moveSymbols(destructingRows);
-        //usleep(10000); 
+        mvaddch(g_height, g_width, ' ');
+        g_table[cursorY][cursorX] = g_cursorSymbol;
+        g_table[cursorY - 1][cursorX] = g_cursorSymbol;
+        if (cursorX != g_width - 1)
+            g_table[cursorY][cursorX + 1] = g_cursorSymbol;
+        if (cursorX != 0)
+            g_table[cursorY][cursorX - 1] = g_cursorSymbol;
 
-        screenRefresh(win);   
-    //TODO: Nenc anel vor chspasi im inputin
+        if(timer % bulletFlightTime == 0)
+            moveSymbols(destructingRows);
+
+        screenRefresh(win);
+
         inputKey = getch();
-        switch (inputKey) {
-            case KEY_LEFT:
-                if (cursorX > 0) cursorX--;
-                break;
-            case KEY_RIGHT:
-                if (cursorX < g_width - 1) cursorX++;
-                break;
-            case KEY_UP:
+        switch (inputKey)
+        {
+        case KEY_LEFT:
+            if (cursorX > 0)
+                cursorX--;
+            break;
+        case KEY_RIGHT:
+            if (cursorX < g_width - 1)
+                cursorX++;
+            break;
+        case KEY_UP:
+            if(coolDownTimer > ShootingCoolDown) {
+                coolDownTimer = 0;
                 shoot();
-                break;
-            case 'q':
-            case 'Q':
-                endwin();
-        }  
+            }
+            break;
+        case 'q':
+        case 'Q':
+            endwin();
+        }
 
-        ++counter;
-       // std::cout << "\n" << counter << "\n" ;
+        ++timer;
+        ++coolDownTimer;
     }
 }
 
-void moveSymbols(std::array<bool, g_height>& destructingRows)
+void moveSymbols(std::array<bool, g_height> &destructingRows)
 {
-    for(int i = 0; i < g_height; ++i) {
-        for(int j = 0; j < g_width; ++j) {
-            if(g_movingMatrix[i][j]) {                
-                if(i - 1 >= 0 && (g_table[i - 1][j] != g_pixelSymbol)) {
+    for (int i = 0; i < g_height; ++i)
+    {
+        for (int j = 0; j < g_width; ++j)
+        {
+            if (g_movingMatrix[i][j])
+            {
+                if (i - 1 >= 0 && (g_table[i - 1][j] != g_pixelSymbol))
+                {
                     g_table[i - 1][j] = g_pixelSymbol;
                     g_table[i][j] = g_emptySpaceSymbol;
 
                     g_movingMatrix[i][j] = false;
 
-                    if(i - 2 >= 0 && (g_table[i - 2][j] != g_pixelSymbol)) {
+                    if (i - 2 >= 0 && (g_table[i - 2][j] != g_pixelSymbol))
+                    {
                         g_movingMatrix[i - 1][j] = true;
-
                     }
                 }
-                else {
+                else
+                {
                     g_movingMatrix[i][j] = false;
                 }
 
-                if( rowDestructionCheck(i - 1) && !g_movingMatrix[i - 1][j])
+                if (rowDestructionCheck(i - 1) && !g_movingMatrix[i - 1][j])
                     destructingRows[i - 1] = true;
             }
         }
     }
 }
 
-void shoot() {
+void shoot()
+{
     int bulletIndexY = g_height - 3;
     const int bulletIndexX = cursorX;
 
@@ -167,45 +194,59 @@ void shoot() {
     g_table[bulletIndexY][bulletIndexX] = g_pixelSymbol;
 }
 
-void screenRefresh(WINDOW* win) {
+void screenRefresh(WINDOW *win)
+{
     werase(win);
 
-    for (int i = 0; i < g_height; i++) {
-            for (int j = 0; j < g_width; j++) {
-                waddch(win, g_table[i][j]);
-            }
+    for (int i = 0; i < g_height; i++)
+    {
+        for (int j = 0; j < g_width; j++)
+        {
+            waddch(win, g_table[i][j]);
         }
+    }
 
     wrefresh(win);
 }
 
-bool rowDestructionCheck(int row) {
-    for (int i = 0; i < g_width; ++i) {
-        if (g_table[row][i] != g_pixelSymbol && !g_movingMatrix[row][i]) {
+bool rowDestructionCheck(int row)
+{
+    for (int i = 0; i < g_width; ++i)
+    {
+        if (g_table[row][i] != g_pixelSymbol && !g_movingMatrix[row][i])
+        {
             return false;
         }
     }
     return true;
 }
 
-bool rowDestruction(std::array<bool, g_height> &destructingRows) {
+bool rowDestruction(std::array<bool, g_height> &destructingRows)
+{
     std::array<std::array<char, g_width>, g_height> tempTable = g_table;
-    //bool needToRefresh;
     int endRow = g_height - 3;
 
-    for(int rowIndex = 0; rowIndex < g_height - 2; ++rowIndex) {
-        if(destructingRows[rowIndex]) {
+    for (int rowIndex = 0; rowIndex < g_height - 2; ++rowIndex)
+    {
+        if (destructingRows[rowIndex])
+        {
             destructingRows[rowIndex] = false;
             int j = rowIndex;
 
-            while (j < endRow) {
-                for (int i = 0; i < g_width; ++i) {
+            while (j < endRow)
+            {
+                for (int i = 0; i < g_width; ++i)
+                {
                     g_table[j][i] = tempTable[j + 1][i];
                 }
                 ++j;
             }
-            
-            //needToRefresh = true;
+
+            for(int i = 0; i < g_width; ++i)
+                g_table[endRow][i] = g_emptySpaceSymbol;
+
+            shiftMovingMatrixUp(rowIndex);
+
             return true;
         }
     }
@@ -216,30 +257,94 @@ bool rowDestruction(std::array<bool, g_height> &destructingRows) {
 void generateRow()
 {
     std::array<std::array<char, g_width>, g_height> tempTable = g_table;
-    std::array<char, g_width> randomFilledRow {'^'};
+    std::array<char, g_width> randomFilledRow;
+    for (int i = 0; i < g_width; i++)
+        randomFilledRow[i] = g_emptySpaceSymbol;
+
     int minRange = g_width / 3;
     int maxRange = g_width / 3 * 2;
     int pixelsCount = (rand() % (maxRange - minRange + 1)) + minRange;
-
+    
     int position;
-    for(int i = 0; i < pixelsCount; ++i) {
-        do {
+    for (int i = 0; i < pixelsCount; ++i)
+    {
+        do
+        {
             position = rand() % g_width;
-        }
-        while (randomFilledRow[position] != g_pixelSymbol);
+        } while (randomFilledRow[position] == g_pixelSymbol);
+        randomFilledRow[position] = g_pixelSymbol;
     }
 
     int j = g_height - 2;
     int endRow = 0;
 
-    while (j > endRow) {
-        for (int i = 0; i < g_width; ++i) {
+    while (j > endRow)
+    {
+        for (int i = 0; i < g_width; ++i)
+        {
             g_table[j][i] = tempTable[j - 1][i];
         }
         --j;
     }
 
-    for (int i = 0; i < g_width; ++i) {
+    for (int i = 0; i < g_width; ++i)
+    {
         g_table[0][i] = randomFilledRow[i];
+    }
+
+    shiftMovingMatrixDown();
+
+    looseCheck();
+}
+
+void shiftMovingMatrixUp(int startRow)
+{
+    std::array<std::array<bool, g_width>, g_height> tempTable = g_movingMatrix;
+
+    int endRow = g_height - 2;
+    int j = startRow;
+
+    while (j < endRow)
+    {
+        for (int i = 0; i < g_width; ++i)
+        {
+            g_movingMatrix[j][i] = tempTable[j + 1][i];
+        }
+        ++j;
+    }
+}
+
+void shiftMovingMatrixDown()
+{
+    std::array<std::array<bool, g_width>, g_height> tempTable = g_movingMatrix;
+
+    int j = g_height - 2;
+    int endRow = 0;
+    while (j > endRow)
+    {
+        for (int i = 0; i < g_width; ++i)
+        {
+            g_movingMatrix[j][i] = tempTable[j - 1][i];
+        }
+        --j;
+    }
+}
+
+void looseCheck()
+{
+    for (int i = 0; i < g_width; ++i)
+    {
+        if(g_table[g_height - 2][i] == g_pixelSymbol && !g_movingMatrix[g_height - 2][i])
+        {
+            loose = true;
+
+            for(int i = 0; i < g_height; ++i)
+            {
+            for(int j = 0; j < g_width; ++j)
+            {
+                g_table[i][j] = '@';
+            }
+            }
+        }
     }
 }
