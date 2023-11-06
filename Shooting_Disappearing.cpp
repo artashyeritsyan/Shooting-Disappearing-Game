@@ -39,31 +39,27 @@ void chooseButtons(WINDOW *win, int cursorX);
 int main()
 {
     mainMenu();
+
     return 0;
 }
 
 void mainMenu()
 {
     initscr();
-    start_color();      // Enable colors
-    init_pair(1, COLOR_BLACK, COLOR_GREEN);
-    attron(COLOR_PAIR(1));
-
+    // start_color();
     keypad(stdscr, TRUE);
     curs_set(0);
     //WINDOW *win = newwin(g_height, g_width, 0, 0);
     //wrefresh(win);
 
     menuButtons();
-    // play(win);
-
-
-    //endwin();
+    // play();
 }
 
 void play()
 {
     WINDOW *win = newwin(g_height, g_width, 0, 0);
+
     int timer = 0;
     int coolDownTimer = 0;
     int ShootingCoolDown = 5000;
@@ -89,7 +85,8 @@ void play()
             g_table[i][j] = g_emptySpaceSymbol;
         }
     }
-    generateRow();    
+    generateRow();
+    generateRow();   
 
     while (!loose)
     {
@@ -155,6 +152,8 @@ void play()
         ++timer;
         ++coolDownTimer;
     }
+    endwin();
+    menuButtons();
 }
 
 void moveSymbols(std::array<bool, g_height> &destructingRows)
@@ -357,6 +356,8 @@ void menuButtons()
 {
     WINDOW *win = newwin(g_height, g_width, 0, 0);
     keypad(stdscr, TRUE);
+    init_pair(1, COLOR_BLACK, COLOR_GREEN);
+    attron(COLOR_PAIR(1));
     
     int cursorX = 0;
     int cursorY = 4;
@@ -405,12 +406,12 @@ void menuButtons()
             if (cursorY < 13)
                 cursorY += 3;
             break;
-        case KEY_LEFT:
-            chooseButtons(win, cursorY);
-            break;
-        case 'q':
-        case 'Q':
+        case KEY_RIGHT:
+            attroff(COLOR_PAIR(1));
             endwin();
+            chooseButtons(win, cursorY);
+            return;
+            break;
         }
     }
 }
@@ -420,14 +421,12 @@ void chooseButtons(WINDOW *win, int cursorY)
     {
         case 4:
             play();
-            endwin();
             break;
         case 7:
             break;
         case 10:
             break;
         case 13:
-            endwin();
             break;
     }
     return;
