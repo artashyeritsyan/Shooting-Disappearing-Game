@@ -13,21 +13,19 @@ struct pixel
 };
 
 bool loose = false;
-const int g_height = 20;
+const int g_height = 16;
 const int g_width = 10;
 const char g_pixelSymbol = 'Ա';
 const char g_cursorSymbol = 'Ֆ';
 const char g_emptySpaceSymbol = '.';
 
-int cursorX = g_width / 2;
-int cursorY = g_height - 1;
 std::array<std::array<char, g_width>, g_height> g_table;
 std::array<std::array<bool, g_width>, g_height> g_movingMatrix;
 
 void mainMenu();
-void play(WINDOW *win);
+void play();
 void moveSymbols(std::array<bool, g_height> &destructingRows);
-void shoot();
+void shoot(int cursorX);
 void screenRefresh(WINDOW *win);
 bool rowDestructionCheck(int rowIndex);
 bool rowDestruction(std::array<bool, g_height> &destructingRows);
@@ -35,6 +33,8 @@ void shiftMovingMatrixUp(int startRow);
 void shiftMovingMatrixDown();
 void generateRow();
 void looseCheck();
+void menuButtons();
+void chooseButtons(WINDOW *win, int cursorX);
 
 int main()
 {
@@ -45,25 +45,34 @@ int main()
 void mainMenu()
 {
     initscr();
+    start_color();      // Enable colors
+    init_pair(1, COLOR_BLACK, COLOR_GREEN);
+    attron(COLOR_PAIR(1));
+
     keypad(stdscr, TRUE);
-    WINDOW *win = newwin(g_height, g_width, 0, 0);
-    wrefresh(win);
-
     curs_set(0);
-    play(win);
-    curs_set(1);
+    //WINDOW *win = newwin(g_height, g_width, 0, 0);
+    //wrefresh(win);
 
-    endwin();
+    menuButtons();
+    // play(win);
+
+
+    //endwin();
 }
 
-void play(WINDOW *win)
+void play()
 {
+    WINDOW *win = newwin(g_height, g_width, 0, 0);
     int timer = 0;
     int coolDownTimer = 0;
     int ShootingCoolDown = 5000;
-    int rowGenerationSpeed = 300000;
+    int rowGenerationSpeed = 200000;
     int bulletFlightTime = 1500;
     
+    int cursorX = g_width / 2;
+    int cursorY = g_height - 1;
+
     std::array<bool, g_height> destructingRows{false};
     //std::string cursor = " # \n###";
     int inputKey;
@@ -80,12 +89,7 @@ void play(WINDOW *win)
             g_table[i][j] = g_emptySpaceSymbol;
         }
     }
-
-    // for (int i = 0; i < g_height - 5; i++) {
-    //     for (int j = 0; j < g_width - 1; j++) {
-    //         g_table[i][j] = g_pixelSymbol;
-    //     }
-    // }
+    generateRow();    
 
     while (!loose)
     {
@@ -95,7 +99,7 @@ void play(WINDOW *win)
         {
             timer = 0;
             if(rowGenerationSpeed > 100000)
-            rowGenerationSpeed - 10000;
+            rowGenerationSpeed -= 10000;
 
             generateRow();
         }
@@ -103,7 +107,7 @@ void play(WINDOW *win)
         if (rowDestruction(destructingRows))
             screenRefresh(win);
 
-        for (int i = 18; i < g_height; i++)
+        for (int i = g_height - 2; i < g_height; i++)
         {
             for (int j = 0; j < g_width; j++)
             {
@@ -111,7 +115,7 @@ void play(WINDOW *win)
             }
         }
 
-        // TODO: Es masi logiakan tanel zangvaci (table)-i mej
+        // TODO: Es masi logikan tanel zangvaci (table)-i mej
 
         mvaddch(g_height, g_width, ' ');
         g_table[cursorY][cursorX] = g_cursorSymbol;
@@ -140,7 +144,7 @@ void play(WINDOW *win)
         case KEY_UP:
             if(coolDownTimer > ShootingCoolDown) {
                 coolDownTimer = 0;
-                shoot();
+                shoot(cursorX);
             }
             break;
         case 'q':
@@ -185,7 +189,7 @@ void moveSymbols(std::array<bool, g_height> &destructingRows)
     }
 }
 
-void shoot()
+void shoot(int cursorX)
 {
     int bulletIndexY = g_height - 3;
     const int bulletIndexX = cursorX;
@@ -347,4 +351,84 @@ void looseCheck()
             }
         }
     }
+}
+
+void menuButtons()
+{
+    WINDOW *win = newwin(g_height, g_width, 0, 0);
+    keypad(stdscr, TRUE);
+    
+    int cursorX = 0;
+    int cursorY = 4;
+
+    std::array<std::string, g_height> screen;
+    int inputKey;
+    
+    for(int i = 0; i < g_height; ++i)
+    {
+        screen[i] = "          ";
+    }
+
+    screen[4] = "   PLAY   ";
+    screen[7] = "  OPTIONS ";
+    screen[10] = "  CREDITS ";
+    screen[13] = "   EXIT   ";
+    
+    while(true)
+    {
+        inputKey = 0;
+        werase(win);
+
+        for (int i = 0; i < g_width; ++i)
+        {
+            mvaddch(cursorY, i, screen[cursorY][i]);
+        }
+        mvaddch(cursorY, cursorX, '>');
+
+        for (int i = 0; i < g_height; i++)
+        {
+            for (int j = 0; j < g_width; j++)
+            {
+                waddch(win, screen[i][j]);
+            }
+        }
+
+        wrefresh(win);
+        inputKey = getch();
+        switch (inputKey)
+        {
+        case KEY_UP:
+            if (cursorY > 4)
+                cursorY -= 3;
+            break;
+        case KEY_DOWN:
+            if (cursorY < 13)
+                cursorY += 3;
+            break;
+        case KEY_LEFT:
+            chooseButtons(win, cursorY);
+            break;
+        case 'q':
+        case 'Q':
+            endwin();
+        }
+    }
+}
+void chooseButtons(WINDOW *win, int cursorY)
+{
+    switch (cursorY)
+    {
+        case 4:
+            play();
+            endwin();
+            break;
+        case 7:
+            break;
+        case 10:
+            break;
+        case 13:
+            endwin();
+            break;
+    }
+    return;
 }
