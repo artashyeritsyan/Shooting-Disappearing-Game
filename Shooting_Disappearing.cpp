@@ -15,8 +15,8 @@ struct pixel
 bool loose = false;
 const int g_height = 16;
 const int g_width = 10;
-const char g_pixelSymbol = 'Ա';
-const char g_cursorSymbol = 'Ֆ';
+const char g_pixelSymbol = '#';
+const char g_cursorSymbol = 'N';
 const char g_emptySpaceSymbol = '.';
 
 std::array<std::array<char, g_width>, g_height> g_table;
@@ -46,7 +46,7 @@ int main()
 void mainMenu()
 {
     initscr();
-    // start_color();
+    start_color();
     keypad(stdscr, TRUE);
     curs_set(0);
     //WINDOW *win = newwin(g_height, g_width, 0, 0);
@@ -74,7 +74,7 @@ void play()
     int inputKey;
 
     noecho();
-    wrefresh(win);
+    refresh();
     nodelay(stdscr, TRUE);
     curs_set(0);
 
@@ -355,6 +355,7 @@ void looseCheck()
 void menuButtons()
 {
     WINDOW *win = newwin(g_height, g_width, 0, 0);
+    //box(win, 0, 0); 
     keypad(stdscr, TRUE);
     init_pair(1, COLOR_BLACK, COLOR_GREEN);
     attron(COLOR_PAIR(1));
