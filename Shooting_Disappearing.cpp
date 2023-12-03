@@ -52,14 +52,16 @@ void mainMenu()
     //WINDOW *win = newwin(g_height, g_width, 0, 0);
     //wrefresh(win);
 
-    menuButtons();
+    while (true)
+        menuButtons();
     // play();
 }
 
 void play()
 {
     WINDOW *win = newwin(g_height, g_width, 0, 0);
-
+    loose = false;
+    
     int timer = 0;
     int coolDownTimer = 0;
     int ShootingCoolDown = 5000;
@@ -146,12 +148,15 @@ void play()
             break;
         case 'q':
         case 'Q':
+            delwin(win);
             endwin();
         }
 
         ++timer;
         ++coolDownTimer;
     }
+    erase();
+    delwin(win);
     endwin();
     menuButtons();
 }
@@ -201,6 +206,7 @@ void screenRefresh(WINDOW *win)
 {
     werase(win);
 
+    box(win, 0, 0);
     for (int i = 0; i < g_height; i++)
     {
         for (int j = 0; j < g_width; j++)
@@ -355,6 +361,8 @@ void looseCheck()
 void menuButtons()
 {
     WINDOW *win = newwin(g_height, g_width, 0, 0);
+    loose = false;
+
     //box(win, 0, 0); 
     keypad(stdscr, TRUE);
     init_pair(1, COLOR_BLACK, COLOR_GREEN);
@@ -394,7 +402,7 @@ void menuButtons()
                 waddch(win, screen[i][j]);
             }
         }
-
+        box(win, 0, 0);
         wrefresh(win);
         inputKey = getch();
         switch (inputKey)
@@ -409,6 +417,8 @@ void menuButtons()
             break;
         case KEY_RIGHT:
             attroff(COLOR_PAIR(1));
+            werase(win);
+            delwin(win);
             endwin();
             chooseButtons(win, cursorY);
             return;
@@ -430,5 +440,4 @@ void chooseButtons(WINDOW *win, int cursorY)
         case 13:
             break;
     }
-    return;
 }
