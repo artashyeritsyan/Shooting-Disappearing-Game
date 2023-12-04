@@ -120,19 +120,3 @@ void MenuScreen::updateMenuWindow() {
     wrefresh(menuWindow);
 }
 
-// int main() {
-//     GameScreen screen;
-
-//     // Example: Update the score by 50
-//     GameScreen::updateScore(50);
-//     screen.updateGameWindow();
-//     getch(); // Wait for a key press
-
-//     // Example: Update the score by 100 and save it to HighScore
-//     GameScreen::updateScore(100);
-//     screen.updateGameWindow();
-//     getch(); // Wait for a key press
-
-//     return 0;
-// }
-

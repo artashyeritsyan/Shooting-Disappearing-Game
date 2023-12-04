@@ -349,10 +349,10 @@ void looseCheck()
 
             for(int i = 0; i < g_height; ++i)
             {
-            for(int j = 0; j < g_width; ++j)
-            {
-                g_table[i][j] = '@';
-            }
+                for(int j = 0; j < g_width; ++j)
+                {
+                    g_table[i][j] = '@';
+                }
             }
         }
     }

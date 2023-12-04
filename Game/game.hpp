@@ -1,15 +1,12 @@
-// #include 
-class Cube {
+#include "board.hpp"
+#include "screen.hpp"
 
+class Game {
 private:
-    int x, y;
-    bool isMooving;
-    
+    Board board;
+    Screen screen;    
 public:
-    Cube();
-    void move();
-    void shoot();
-
-    print()
-
+    Game();
+    ~Game();
+    void start();    
 };

@@ -1,20 +1,12 @@
-#include <curses.h>
+#include "game.hpp"
 
-class Cube {
+Game::Game() {
 
-private:
-    int x, y;
-    bool isMooving;
+}
 
-public:
-    Cube(int x, int y, bool isMooving) : x(x), y(y), isMooving(isMooving) {}
-
-    void draw(int color) {
-        attron(COLOR_PAIR(color));
-        mvprintw(y, x, "#");
-        attroff(COLOR_PAIR(color));
-    }
-
-    print()
-
-};
+void Game::start() {
+    /*TODO: Create Timer, While loop, Input,
+     Calling functions(AddNewLine, Shoot, RefreshScreen) 
+     And create function and logic for loose
+    */
+}

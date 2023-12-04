@@ -2,9 +2,14 @@
 
 class Cube {
 private:
-    const char symbol = '#';
-    bool isBullet;
+    bool isBlock = false;
+    bool isMoving = false;
 public:
     Cube();
+    Cube(bool isBullet);
     ~Cube();
+    bool getBlock();
+    bool getMovement();
+    void setBlock(bool);
+    void setMovement(bool );
 };
