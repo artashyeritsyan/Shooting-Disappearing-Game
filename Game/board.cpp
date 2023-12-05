@@ -8,8 +8,12 @@ Board::~Board() {
 
 }
 
-std::array<Cube, boardWidth> Board::generateRow() {
-    std::array<Cube, boardWidth> randomFilledRow;
+matrixOfCube Board::getTable() {
+    return table;
+}
+
+arrayOfCube Board::generateRow() {
+    arrayOfCube randomFilledRow;
 
     int minRange = boardWidth / 3;
     int maxRange = boardWidth / 3 * 2;
@@ -63,6 +67,16 @@ void Board::shoot(int cursorX) {
 
     table[bulletIndexY][bulletIndexX].setMovement(true);
     table[bulletIndexY][bulletIndexX].setBlock(true);
+}
+
+void Board::updatePlayerPosition(int positionX, int positionY) {
+    table[positionY][positionX].setBlock(true);
+    table[positionY - 1][positionX].setBlock(true);
+
+    if (positionX != boardWidth - 1)
+        table[positionY][positionX + 1].setBlock(true);
+    if (positionX != 0)
+        table[positionY][positionX - 1].setBlock(true);
 }
 
 void Board::moveBulletsUp() {

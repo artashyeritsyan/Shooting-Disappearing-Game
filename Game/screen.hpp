@@ -2,6 +2,8 @@
 #include <ncurses.h>
 #include <fstream>
 
+#include "board.hpp"
+
 class Screen
 {
 private:
@@ -22,11 +24,13 @@ public:
 class GameScreen:Screen {
 private : 
     const int gameScreenHeight = 20;
-    const int gameScreenwidth = 20;
+    const int gameScreenWidth = 20;
     const int scoreScreenHeight = 20;
     const int scoreScreenWidth = 10;
 
     int score;
+    int offsetX = 1;
+    int offsetY = 1;
 
     WINDOW *gameWindow;
     WINDOW *scoreWindow;
@@ -35,8 +39,8 @@ public:
     GameScreen();
     ~GameScreen();
 
-    void updateGameWindow();
-    void updateScore(int amount);
+    void updateGameWindow(matrixOfCube table);
+    void updateScore(int amount = 100);
     void updateScoreDisplay();
 };
 
