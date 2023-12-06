@@ -6,7 +6,7 @@
 #include "cube.hpp"
 
 static const int boardHeight = 20;
-static const int boardWidth = 20;
+static const int boardWidth = 10;
 
 using arrayOfCube = std::array<Cube, boardWidth>;
 using matrixOfCube = std::array<arrayOfCube, boardHeight>;

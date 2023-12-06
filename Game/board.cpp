@@ -36,7 +36,7 @@ void Board::addNewLine() {
     
     for(int i = 0; i < boardWidth; ++i){
         if(table[boardHeight - 3][i].getBlock())
-            return;
+           std::cout << "YOU LOSEEEEE!!" << std::endl;
             //LOOSE FUNCTION (Mi ban pti mtacvi)
     }
 
@@ -58,6 +58,7 @@ void Board::addNewLine() {
     for (int i = 0; i < boardWidth; ++i)
     {
         table[0][i] = generatedRow[i];
+        table[0][i].setMovement(false);
     }
 }
 
@@ -70,6 +71,12 @@ void Board::shoot(int cursorX) {
 }
 
 void Board::updatePlayerPosition(int positionX, int positionY) {
+    for (int i = boardHeight - 2; i < boardHeight; ++i) {
+        for (int j = 0; j < boardWidth; ++j) {
+            table[i][j].setBlock(false);
+        }
+    }
+
     table[positionY][positionX].setBlock(true);
     table[positionY - 1][positionX].setBlock(true);
 
@@ -93,7 +100,8 @@ void Board::moveBulletsUp() {
 
                     table[i][j].setMovement(false);
 
-                    if (i - 2 >= 0 && (!table[i - 2][j].getBlock()))
+                    if (i - 2 >= 0 && (!table[i - 2][j].getBlock() || 
+                    table[i - 2][j].getBlock() && table[i - 2][j].getMovement()) )
                     {
                         table[i - 1][j].setMovement(true);
                     }
@@ -110,22 +118,30 @@ void Board::moveBulletsUp() {
 }
 
 void Board::checkToDestroyLine() {
+    bool isLineFull = true;
     for (int i = 0; i < boardHeight; ++i)
-    {
+    {   
+        isLineFull = true;
         for (int j = 0; j < boardWidth; ++j)
         {
-            if (table[i][j].getBlock() && !table[i][j].getMovement()) {
-                continue;
+            if (!table[i][j].getBlock() || table[i][j].getMovement()) {
+                isLineFull = false;
             }
         }
 
-        destroyLine(i);
-        break;
+        if (isLineFull) {
+            destroyLine(i);
+            break;
+        }        
     }
 }
 
 void Board::destroyLine(int lineIndex) {
     auto tempTable = table;
+    ///
+    for(int i = 0; i < boardWidth; ++i) {
+        table[10][i].setBlock(true);
+    }
 
     int startRow = lineIndex;
     int endRow = boardHeight - 3;
@@ -141,6 +157,7 @@ void Board::destroyLine(int lineIndex) {
 
     for(int i = 0; i < boardWidth; ++i) {
         table[endRow][i].setBlock(false);
+        table[endRow][i].setMovement(false);
     }
 
     destructionAnimation(lineIndex);

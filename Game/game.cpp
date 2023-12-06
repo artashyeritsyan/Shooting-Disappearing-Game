@@ -19,14 +19,18 @@ void Game::start() {
 
      And create function and logic for loose !!
     */
+    GameScreen screen;
+
     while (true) {
         
-       // std::cout << cursorX << std::endl;
+    //    std::cout << cursorX << std::endl;
         inputHandling();
         cooldownManager();
+
         board.updatePlayerPosition(cursorX, cursorY);
         
         screen.updateGameWindow(board.getTable());
+        screen.updateScoreDisplay();
     }
 
 }
@@ -60,25 +64,23 @@ void Game::cooldownManager() {
     
     if (currentTime - rowGenerationStartTime >= rowGenerationTime) {
         board.addNewLine();
-        //std::cout << "generate Row---------------------------------------------" << std::endl;
         rowGenerationStartTime = currentTime;
     }
 
     if (currentTime - bulletMovingStartTime >= bulletMovingTime) {
         board.moveBulletsUp();
-        //std::cout << "move bullets" << std::endl;
         bulletMovingStartTime = currentTime;
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    //std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
 
 void Game::shootManager() {
     auto currentTime = std::chrono::steady_clock::now();
 
     if (currentTime - shotCooldownStartTime >= shotCooldownTime) {
-        board.shoot(cursorX);
-
         bulletMovingStartTime = currentTime;
+
+        board.shoot(cursorX);
     }
 }

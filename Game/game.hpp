@@ -12,10 +12,9 @@ using TimePoint = std::chrono::time_point<SteadyClock>;
 class Game {
 private:
     Board board;
-    GameScreen screen;
     
     const std::chrono::milliseconds rowGenerationTime{5000};    
-    const std::chrono::milliseconds bulletMovingTime{200};
+    const std::chrono::milliseconds bulletMovingTime{100};
     const std::chrono::milliseconds shotCooldownTime{100};
 
     TimePoint rowGenerationStartTime;

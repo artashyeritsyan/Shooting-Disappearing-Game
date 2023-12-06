@@ -2,8 +2,8 @@
 
 class Cube {
 private:
-    bool isBlock = false;
-    bool isMoving = false;
+    bool isBlock;
+    bool isMoving;
 public:
     Cube();
     Cube(bool isBullet);
@@ -11,5 +11,5 @@ public:
     bool getBlock();
     bool getMovement();
     void setBlock(bool);
-    void setMovement(bool );
+    void setMovement(bool);
 };

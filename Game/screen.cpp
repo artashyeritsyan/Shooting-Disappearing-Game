@@ -4,10 +4,12 @@ Screen::Screen() {
     initscr();
     cbreak();
     noecho();
+    curs_set(0);
     keypad(stdscr, TRUE);
     nodelay(stdscr, TRUE);
+    start_color();
 
-    init_pair(1, COLOR_BLACK, COLOR_RED);
+    init_pair(1, COLOR_BLACK, COLOR_CYAN);
     init_pair(2, COLOR_RED, COLOR_BLACK);
 
     highScore = 0;
@@ -36,14 +38,13 @@ void Screen::loadScoreFromFile() {
     //TODO: Implement logic to load score from file
 }
 
-
-
-GameScreen::GameScreen() {
+GameScreen::GameScreen():Screen() {
     score = 0;
 
     int max_x;
     int max_y;
-    getmaxyx(stdscr, max_x, max_y);
+
+    getmaxyx(stdscr, max_y, max_x);
 
     const int gameScreenY = max_y/2 - (gameScreenHeight + 2)/2;
     const int gameScreenX = max_x/2 - (gameScreenWidth + scoreScreenWidth + 4)/2;
@@ -52,9 +53,6 @@ GameScreen::GameScreen() {
     //     std::cout << "screen too small for display game" << std::endl;
     //     exit(0);
     // }
-        std::cout << gameScreenY << std::endl;
-        std::cout << gameScreenX << std::endl;
-
 
     gameWindow = newwin(gameScreenHeight + 2,
                         gameScreenWidth + 2,
@@ -84,16 +82,19 @@ void GameScreen::updateGameWindow(matrixOfCube table) {
 
     for (int row = 0; row < gameScreenHeight; ++row) 
     {
-        for (int col = 0; col < gameScreenWidth; ++col) 
+        for (int col = 0; col < gameScreenWidth; col += 2) 
         {
-            if (table[row][col].getBlock()) {
+            //TODO: fix this line "col / 2" part, create another logic
+            if (table[row][col / 2].getBlock()) {
                 wattron(gameWindow, COLOR_PAIR(1));
                 mvwaddch(gameWindow, offsetY + row, offsetX + col, ' ');
+                mvwaddch(gameWindow, offsetY + row, offsetX + col + 1, ' ');
                 wattroff(gameWindow, COLOR_PAIR(1));
             }
             else {
                 wattron(gameWindow, COLOR_PAIR(2));
                 mvwaddch(gameWindow, offsetY + row, offsetX + col, ' ');
+                mvwaddch(gameWindow, offsetY + row, offsetX + col + 1, ' ');
                 wattroff(gameWindow, COLOR_PAIR(2));
             }
         }
@@ -105,7 +106,6 @@ void GameScreen::updateGameWindow(matrixOfCube table) {
 void GameScreen::increaseScore() {
     score += 100;
     updateHighScore(score);
-    updateScoreDisplay();
 }
 
 void GameScreen::updateScoreDisplay() {
