@@ -19,8 +19,9 @@ void Game::start() {
 
      And create function and logic for loose !!
     */
-
     while (true) {
+        
+       // std::cout << cursorX << std::endl;
         inputHandling();
         cooldownManager();
         board.updatePlayerPosition(cursorX, cursorY);
@@ -31,24 +32,26 @@ void Game::start() {
 }
 
 void Game::inputHandling() {
-    char inputKey = getch();
+    char inputKey;
+    inputKey = getch();
 
     switch (inputKey)
     {
-    case KEY_LEFT:
+    case 'a':  //TODO: implement this input with KEY_LEFT, and etc.
         if (cursorX > 0)
            --cursorX;
         break;
-    case KEY_RIGHT:
+    case 'd':
         if (cursorX < boardWidth - 1)
             ++cursorX;
         break;
-    case KEY_UP:        
+    case 'w':
             shootManager();
         break;
     case 'q':
     case 'Q':
         //TODO: create logic to end game
+        break;
     }
 }
 
@@ -57,13 +60,13 @@ void Game::cooldownManager() {
     
     if (currentTime - rowGenerationStartTime >= rowGenerationTime) {
         board.addNewLine();
-
+        //std::cout << "generate Row---------------------------------------------" << std::endl;
         rowGenerationStartTime = currentTime;
     }
 
     if (currentTime - bulletMovingStartTime >= bulletMovingTime) {
         board.moveBulletsUp();
-
+        //std::cout << "move bullets" << std::endl;
         bulletMovingStartTime = currentTime;
     }
 

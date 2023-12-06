@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <ncurses.h>
 #include <fstream>
@@ -21,7 +23,7 @@ public:
 };
 
 
-class GameScreen:Screen {
+class GameScreen:Screen::Screen {
 private : 
     const int gameScreenHeight = 20;
     const int gameScreenWidth = 20;
@@ -40,7 +42,7 @@ public:
     ~GameScreen();
 
     void updateGameWindow(matrixOfCube table);
-    void updateScore(int amount = 100);
+    void increaseScore();
     void updateScoreDisplay();
 };
 

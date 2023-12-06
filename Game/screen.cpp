@@ -1,15 +1,19 @@
 #include "screen.hpp"
-#include "board.hpp"
 
 Screen::Screen() {
     initscr();
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
+    nodelay(stdscr, TRUE);
 
     init_pair(1, COLOR_BLACK, COLOR_RED);
     init_pair(2, COLOR_RED, COLOR_BLACK);
+
+    highScore = 0;
+    loadScoreFromFile();
 }
+int Screen::highScore = 0;
 
 Screen::~Screen() {
 
@@ -44,15 +48,18 @@ GameScreen::GameScreen() {
     const int gameScreenY = max_y/2 - (gameScreenHeight + 2)/2;
     const int gameScreenX = max_x/2 - (gameScreenWidth + scoreScreenWidth + 4)/2;
 
-    if(max_x <= gameScreenWidth + scoreScreenWidth || max_y <= gameScreenHeight + scoreScreenHeight) {
-        std::cout << "screen too small for display game" << std::endl;
-        exit(0);
-    }
+    // if(max_x <= gameScreenWidth + scoreScreenWidth || max_y <= gameScreenHeight + scoreScreenHeight) {
+    //     std::cout << "screen too small for display game" << std::endl;
+    //     exit(0);
+    // }
+        std::cout << gameScreenY << std::endl;
+        std::cout << gameScreenX << std::endl;
+
 
     gameWindow = newwin(gameScreenHeight + 2,
                         gameScreenWidth + 2,
                         gameScreenY,
-                        gameScreenX); 
+                        gameScreenX);
 
     scoreWindow = newwin(scoreScreenHeight + 2,
                          scoreScreenWidth + 2,
@@ -73,6 +80,7 @@ GameScreen::~GameScreen() {
 
 void GameScreen::updateGameWindow(matrixOfCube table) {
     werase(gameWindow);
+    box(gameWindow, 0, 0);
 
     for (int row = 0; row < gameScreenHeight; ++row) 
     {
@@ -94,8 +102,8 @@ void GameScreen::updateGameWindow(matrixOfCube table) {
     wrefresh(gameWindow);
 }
 
-void GameScreen::updateScore(int amount = 100) {
-    score += amount;
+void GameScreen::increaseScore() {
+    score += 100;
     updateHighScore(score);
     updateScoreDisplay();
 }
