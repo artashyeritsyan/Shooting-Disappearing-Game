@@ -36,9 +36,9 @@ arrayOfCube Board::generateRow() {
 void Board::addNewLine() {
     
     for(int i = 0; i < boardWidth; ++i){
-        if(table[boardHeight - 3][i].getBlock())
+        if(table[boardHeight - 3][i].getBlock() && !table[boardHeight - 3][i].getMovement())
            std::cout << "YOU LOSEEEEE!!" << std::endl;
-            //LOOSE FUNCTION (Mi ban pti mtacvi)
+            //TODO: LOOSE FUNCTION (Mi ban pti mtacvi)
     }
 
     auto tempTable = table;

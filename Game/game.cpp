@@ -22,7 +22,7 @@ void Game::start() {
 
      And create function and logic for loose !!
     */
-   
+
     while (true) {
         
     //    std::cout << cursorX << std::endl;
@@ -82,7 +82,7 @@ void Game::shootManager() {
     auto currentTime = std::chrono::steady_clock::now();
 
     if (currentTime - shotCooldownStartTime >= shotCooldownTime) {
-        bulletMovingStartTime = currentTime;
+        shotCooldownStartTime = currentTime;
 
         board.shoot(cursorX);
     }

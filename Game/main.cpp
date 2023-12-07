@@ -6,7 +6,7 @@
 #include "screen.hpp"
 
 int main() {
-
+    // Search TODO and add features :)
     Game game;
     game.start();
 

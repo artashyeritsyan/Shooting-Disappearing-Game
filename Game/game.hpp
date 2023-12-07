@@ -15,7 +15,7 @@ private:
     Board board;
     GameScreen screen;
     
-    const std::chrono::milliseconds rowGenerationTime{5000};    
+    const std::chrono::milliseconds rowGenerationTime{4500};    
     const std::chrono::milliseconds bulletMovingTime{20};
     const std::chrono::milliseconds shotCooldownTime{100};
 
