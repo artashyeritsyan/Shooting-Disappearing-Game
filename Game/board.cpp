@@ -13,6 +13,7 @@ matrixOfCube Board::getTable() {
 }
 
 arrayOfCube Board::generateRow() {
+    srand(time(NULL));
     arrayOfCube randomFilledRow;
 
     int minRange = boardWidth / 3;

@@ -1,6 +1,9 @@
 #include "game.hpp"
 
 Game::Game() {
+    GameScreen screen;
+    Board board;
+
     rowGenerationStartTime = std::chrono::steady_clock::now();
     bulletMovingStartTime = std::chrono::steady_clock::now();
     shotCooldownStartTime = std::chrono::steady_clock::now();
@@ -19,8 +22,7 @@ void Game::start() {
 
      And create function and logic for loose !!
     */
-    GameScreen screen;
-
+   
     while (true) {
         
     //    std::cout << cursorX << std::endl;
@@ -50,6 +52,7 @@ void Game::inputHandling() {
             ++cursorX;
         break;
     case 'w':
+    case ' ':
             shootManager();
         break;
     case 'q':
