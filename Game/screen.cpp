@@ -11,31 +11,10 @@ Screen::Screen() {
 
     init_pair(1, COLOR_BLACK, COLOR_CYAN);
     init_pair(2, COLOR_RED, COLOR_BLACK);
-
-    highScore = 0;
-    loadScoreFromFile();
 }
-int Screen::highScore = 0;
 
 Screen::~Screen() {
 
-}
-
-void Screen::updateHighScore(int score) {
-    if(score > highScore)
-        highScore = score;
-}
-
-int Screen::getHighScore() {
-    return highScore;
-}
-
-void Screen::saveScoreInFile() {
-    //TODO: Implement logic to save score in file
-}
-
-void Screen::loadScoreFromFile() {
-    //TODO: Implement logic to load score from file
 }
 
 GameScreen::GameScreen():Screen() {
@@ -48,10 +27,14 @@ GameScreen::GameScreen():Screen() {
 
     const int gameScreenY = max_y/2 - (gameScreenHeight + 2)/2;
     const int gameScreenX = max_x/2 - (gameScreenWidth + scoreScreenWidth + 4)/2;
+    std::cout << max_x << std::endl;
+    std::cout << max_y << std::endl;
+    std::cout << gameScreenHeight << std::endl;
+    std::cout << scoreScreenHeight << std::endl;
 
-    // if(max_x <= gameScreenWidth + scoreScreenWidth || max_y <= gameScreenHeight + scoreScreenHeight) {
+    // if(max_x <= (gameScreenWidth + scoreScreenWidth) || max_y <= (gameScreenHeight + scoreScreenHeight)) {
     //     std::cout << "screen too small for display game" << std::endl;
-    //     exit(0);
+    //    // exit(0);
     // }
 
     gameWindow = newwin(gameScreenHeight + 2,
@@ -103,12 +86,7 @@ void GameScreen::updateGameWindow(matrixOfCube table) {
     wrefresh(gameWindow);
 }
 
-void GameScreen::increaseScore() {
-    score += 100;
-    updateHighScore(score);
-}
-
-void GameScreen::updateScoreDisplay() {
+void GameScreen::updateScoreDisplay(int score, int hightScore) {
     werase(scoreWindow);
     box(scoreWindow, 0, 0);
 
@@ -116,7 +94,7 @@ void GameScreen::updateScoreDisplay() {
     mvwprintw(scoreWindow, 2, 1, "    %d", score);
 
     mvwprintw(scoreWindow, 3, 1, " HI-SCORE");
-    mvwprintw(scoreWindow, 4, 1, "    %d", getHighScore());
+    mvwprintw(scoreWindow, 4, 1, "    %d", hightScore);
 
     wrefresh(scoreWindow);
 }
@@ -128,10 +106,10 @@ MenuScreen::MenuScreen() {
     int max_y;
     getmaxyx(stdscr, max_x, max_y);
 
-    if(max_x <= menuScreenWidth || max_y <= menuScreenHeight) {
-    std::cout << "screen too small for display game" << std::endl;
-    exit(0);
-    }
+    // if(max_x <= menuScreenWidth || max_y <= menuScreenHeight) {
+        // std::cout << "screen too small for display game" << std::endl;
+        // exit(0);
+    // }
 
     menuWindow = newwin(menuScreenHeight + 2,
                         menuScreenWidth + 2,

@@ -102,7 +102,7 @@ void Board::moveBulletsUp() {
                     table[i][j].setMovement(false);
 
                     if (i - 2 >= 0 && (!table[i - 2][j].getBlock() || 
-                    table[i - 2][j].getBlock() && table[i - 2][j].getMovement()) )
+                    (table[i - 2][j].getBlock() && table[i - 2][j].getMovement())) )
                     {
                         table[i - 1][j].setMovement(true);
                     }
@@ -114,11 +114,9 @@ void Board::moveBulletsUp() {
             }
         }
     }
-
-    checkToDestroyLine();
 }
 
-void Board::checkToDestroyLine() {
+bool Board::checkToDestroyLine() {
     bool isLineFull = true;
     for (int i = 0; i < boardHeight; ++i)
     {   
@@ -132,9 +130,10 @@ void Board::checkToDestroyLine() {
 
         if (isLineFull) {
             destroyLine(i);
-            break;
+            return true;
         }        
     }
+    return false;
 }
 
 void Board::destroyLine(int lineIndex) {

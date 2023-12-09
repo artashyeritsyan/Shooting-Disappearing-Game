@@ -2,24 +2,15 @@
 
 #include <iostream>
 #include <ncurses.h>
-#include <fstream>
 
 #include "board.hpp"
 
 class Screen
 {
 private:
-    static int highScore;
-
-protected:
-    void saveScoreInFile();
-    void updateHighScore(int score);
-    int getHighScore();
-
 public:
     Screen();
     ~Screen();
-    void loadScoreFromFile();
 };
 
 
@@ -42,8 +33,7 @@ public:
     ~GameScreen();
 
     void updateGameWindow(matrixOfCube table);
-    void increaseScore();
-    void updateScoreDisplay();
+    void updateScoreDisplay(int score, int hightScore);
 };
 
 

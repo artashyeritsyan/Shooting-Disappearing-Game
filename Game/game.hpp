@@ -6,6 +6,7 @@
 
 #include "board.hpp"
 #include "screen.hpp"
+#include "scoreManager.hpp"
 
 using SteadyClock = std::chrono::steady_clock;
 using TimePoint = std::chrono::time_point<SteadyClock>; 
@@ -14,6 +15,7 @@ class Game {
 private:
     Board board;
     GameScreen screen;
+    ScoreManager scoreManager;
     
     const std::chrono::milliseconds rowGenerationTime{4500};    
     const std::chrono::milliseconds bulletMovingTime{20};
@@ -25,6 +27,8 @@ private:
 
     int cursorX;
     int cursorY;
+
+    int scoreAmount = 100;
     
 public:
     Game();

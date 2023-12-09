@@ -1,8 +1,9 @@
 #include "game.hpp"
 
 Game::Game() {
-    GameScreen screen;
     Board board;
+    GameScreen screen;
+    ScoreManager scoreManager;
 
     rowGenerationStartTime = std::chrono::steady_clock::now();
     bulletMovingStartTime = std::chrono::steady_clock::now();
@@ -23,16 +24,17 @@ void Game::start() {
      And create function and logic for loose !!
     */
 
+   //TODO: add logic to increase score when line destruct
+
+
     while (true) {
-        
-    //    std::cout << cursorX << std::endl;
         inputHandling();
         cooldownManager();
 
         board.updatePlayerPosition(cursorX, cursorY);
         
         screen.updateGameWindow(board.getTable());
-        screen.updateScoreDisplay();
+        screen.updateScoreDisplay(scoreManager.getScore(), scoreManager.getHighScore());
     }
 
 }
@@ -72,6 +74,9 @@ void Game::cooldownManager() {
 
     if (currentTime - bulletMovingStartTime >= bulletMovingTime) {
         board.moveBulletsUp();
+        if (board.checkToDestroyLine()) {
+            scoreManager.increaseScore(scoreAmount);
+        }
         bulletMovingStartTime = currentTime;
     }
 

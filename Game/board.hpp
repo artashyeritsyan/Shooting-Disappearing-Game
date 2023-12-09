@@ -17,11 +17,11 @@ private:
     void destroyLine(int lineIndex);
 
 public:
-    Board();    
+    Board();
     ~Board();
     void shoot(int cursorX);
     void moveBulletsUp();
-    void checkToDestroyLine();
+    bool checkToDestroyLine();
     void addNewLine();
     void destructionAnimation(int lineIndex);
     void updatePlayerPosition(int positionX, int positionY);
