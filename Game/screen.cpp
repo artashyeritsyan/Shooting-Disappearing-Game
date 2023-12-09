@@ -18,8 +18,6 @@ Screen::~Screen() {
 }
 
 GameScreen::GameScreen():Screen() {
-    score = 0;
-
     int max_x;
     int max_y;
 
@@ -91,10 +89,10 @@ void GameScreen::updateScoreDisplay(int score, int hightScore) {
     box(scoreWindow, 0, 0);
 
     mvwprintw(scoreWindow, 1, 1, "  SCORE");
-    mvwprintw(scoreWindow, 2, 1, "    %d", score);
+    mvwprintw(scoreWindow, 2, 1, "   %d", score);
 
     mvwprintw(scoreWindow, 3, 1, " HI-SCORE");
-    mvwprintw(scoreWindow, 4, 1, "    %d", hightScore);
+    mvwprintw(scoreWindow, 4, 1, "   %d", hightScore);
 
     wrefresh(scoreWindow);
 }
@@ -105,11 +103,6 @@ MenuScreen::MenuScreen() {
     int max_x;
     int max_y;
     getmaxyx(stdscr, max_x, max_y);
-
-    // if(max_x <= menuScreenWidth || max_y <= menuScreenHeight) {
-        // std::cout << "screen too small for display game" << std::endl;
-        // exit(0);
-    // }
 
     menuWindow = newwin(menuScreenHeight + 2,
                         menuScreenWidth + 2,
@@ -125,7 +118,44 @@ MenuScreen::~MenuScreen()
     endwin();
 }
 
-void MenuScreen::updateMenuWindow() {
+void MenuScreen::updateMenuWindow(int choice) {
+    werase(menuWindow);
+
+    int choice;
+    int highlight = 0;
+
+    while (1) {
+        for (int i = 0; i < 4; i++) {
+            if (i == highlight)
+                wattron(menuwin, A_REVERSE); // Highlight the current choice
+            mvwprintw(menuwin, i + 10, 25, choices[i]);
+            wattroff(menuwin, A_REVERSE); // Turn off the highlight
+        }
+
+        choice = wgetch(menuwin); // Get user input
+
+        switch (choice) {
+        case KEY_UP:
+            highlight--;
+            if (highlight == -1)
+                highlight = 0;
+            
+        case KEY_DOWN:
+            highlight++;
+            if (highlight == 4)
+                highlight = 3;
+            break;
+        default:
+            break;
+        }
+
+        if(choice == 10) //key ENTER
+            break;
+    } 
+
+    endwin();
+
+    return highlight;
     wrefresh(menuWindow);
 }
 

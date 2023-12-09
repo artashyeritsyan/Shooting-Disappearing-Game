@@ -2,7 +2,6 @@
 
 #include <chrono>
 #include <iostream>
-#include <thread>
 
 #include "board.hpp"
 #include "screen.hpp"

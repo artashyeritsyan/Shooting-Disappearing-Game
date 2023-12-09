@@ -14,14 +14,13 @@ public:
 };
 
 
-class GameScreen:Screen::Screen {
+class GameScreen:Screen {
 private : 
     const int gameScreenHeight = 20;
     const int gameScreenWidth = 20;
     const int scoreScreenHeight = 20;
     const int scoreScreenWidth = 10;
 
-    int score;
     int offsetX = 1;
     int offsetY = 1;
 

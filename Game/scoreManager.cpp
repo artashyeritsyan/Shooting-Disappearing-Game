@@ -26,15 +26,26 @@ void ScoreManager::increaseScore(int score) {
 }
 
 void ScoreManager::saveScoreInFile() {
-    //TODO: Implement logic to save score in file
+    std::ofstream file("scores.txt", std::ios::out);
+
+    if (file.is_open()) {
+        file << highScore << std::endl;
+        file.close();
+    }
 }
 
 void ScoreManager::loadScoreFromFile() {
-    //TODO: Implement logic to load score from file
+    std::ifstream file("scores.txt");
+
+    if (file.is_open()) {
+        file >> highScore;
+        file.close();
+    }
 }
 
 void ScoreManager::updateHighScore() {
     if(score > highScore) {
         highScore = score;
+        saveScoreInFile();
     }
 }
