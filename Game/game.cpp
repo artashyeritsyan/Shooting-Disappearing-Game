@@ -18,16 +18,7 @@ Game::~Game() {
 }
 
 void Game::start() {
-    /*TODO: Create Timer-, While loop-, Input-,
-     Calling functions(AddNewLine-, Shoot-, RefreshScreen-) -
-
-     And create function and logic for loose !!
-    */
-
-   //TODO: add logic to increase score when line destruct
-
-
-    while (true) {
+    while (!board.getIsLose()) {
         inputHandling();
         cooldownManager();
 
@@ -36,7 +27,6 @@ void Game::start() {
         screen.updateGameWindow(board.getTable());
         screen.updateScoreDisplay(scoreManager.getScore(), scoreManager.getHighScore());
     }
-
 }
 
 void Game::inputHandling() {

@@ -17,7 +17,7 @@ private:
     ScoreManager scoreManager;
     
     const std::chrono::milliseconds rowGenerationTime{4500};    
-    const std::chrono::milliseconds bulletMovingTime{20};
+    const std::chrono::milliseconds bulletMovingTime{25};
     const std::chrono::milliseconds shotCooldownTime{100};
 
     TimePoint rowGenerationStartTime;

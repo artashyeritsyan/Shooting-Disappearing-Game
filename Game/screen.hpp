@@ -38,11 +38,32 @@ public:
 
 class MenuScreen:Screen {
 private:
-    const int menuScreenHeight = 10;
-    const int menuScreenWidth = 10;
+    const int menuScreenHeight = 9;
+    const int menuScreenWidth = 14;
+
     WINDOW *menuWindow;
+
+    const std::string buttons[4] = {
+    "Play",
+    "Settings",
+    "Help",
+    "Exit",
+    };
+
 public:
     MenuScreen();
     ~MenuScreen();
-    void updateMenuWindow();
+    void updateMenuWindow(int choice);
+};
+
+class RestartScreen:Screen { 
+    const int restartScreenHeight = 10;
+    const int restartScreenWidth = 10;
+
+    WINDOW *restartWindow;
+
+public:
+    RestartScreen();
+    ~RestartScreen();
+    void updateRestartScreen();
 };

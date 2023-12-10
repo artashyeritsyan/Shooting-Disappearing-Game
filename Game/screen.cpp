@@ -10,7 +10,8 @@ Screen::Screen() {
     start_color();
 
     init_pair(1, COLOR_BLACK, COLOR_CYAN);
-    init_pair(2, COLOR_RED, COLOR_BLACK);
+    init_pair(2, COLOR_CYAN, COLOR_BLACK);
+    init_pair(3, COLOR_YELLOW, COLOR_BLACK);
 }
 
 Screen::~Screen() {
@@ -99,10 +100,10 @@ void GameScreen::updateScoreDisplay(int score, int hightScore) {
 
 
 
-MenuScreen::MenuScreen() {
+MenuScreen::MenuScreen():Screen() {
     int max_x;
     int max_y;
-    getmaxyx(stdscr, max_x, max_y);
+    getmaxyx(stdscr, max_y, max_x);
 
     menuWindow = newwin(menuScreenHeight + 2,
                         menuScreenWidth + 2,
@@ -120,42 +121,23 @@ MenuScreen::~MenuScreen()
 
 void MenuScreen::updateMenuWindow(int choice) {
     werase(menuWindow);
+    box(menuWindow, 0, 0);
 
-    int choice;
-    int highlight = 0;
+    int offsetX;
+    int offsetY = menuScreenHeight / buttons->length();
+    for (int i = 0; i < 4; i++) {
+            wattron(menuWindow, COLOR_PAIR(3));
+        if (i == choice)
+            wattron(menuWindow, A_REVERSE);
 
-    while (1) {
-        for (int i = 0; i < 4; i++) {
-            if (i == highlight)
-                wattron(menuwin, A_REVERSE); // Highlight the current choice
-            mvwprintw(menuwin, i + 10, 25, choices[i]);
-            wattroff(menuwin, A_REVERSE); // Turn off the highlight
-        }
+        //TODO: Nenc anel vor tpeluc barery sirun dasavorvac inen mejtexy, aysinqn offsety chisht hashvarkel
+        offsetX = (menuScreenWidth - buttons[i].length()) / 2 + 1;
+        mvwprintw(menuWindow, offsetY * (i+1), offsetX, buttons[i].c_str());
 
-        choice = wgetch(menuwin); // Get user input
+        wattroff(menuWindow, A_REVERSE);
+        wattroff(menuWindow, COLOR_PAIR(3));
 
-        switch (choice) {
-        case KEY_UP:
-            highlight--;
-            if (highlight == -1)
-                highlight = 0;
-            
-        case KEY_DOWN:
-            highlight++;
-            if (highlight == 4)
-                highlight = 3;
-            break;
-        default:
-            break;
-        }
+    }
 
-        if(choice == 10) //key ENTER
-            break;
-    } 
-
-    endwin();
-
-    return highlight;
     wrefresh(menuWindow);
 }
-

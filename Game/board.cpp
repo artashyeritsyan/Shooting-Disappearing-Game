@@ -12,6 +12,10 @@ matrixOfCube Board::getTable() {
     return table;
 }
 
+bool Board::getIsLose() {
+    return isLose;
+}
+
 arrayOfCube Board::generateRow() {
     srand(time(NULL));
     arrayOfCube randomFilledRow;
@@ -35,10 +39,10 @@ arrayOfCube Board::generateRow() {
 
 void Board::addNewLine() {
     
-    for(int i = 0; i < boardWidth; ++i){
-        if(table[boardHeight - 3][i].getBlock() && !table[boardHeight - 3][i].getMovement())
-           std::cout << "YOU LOSEEEEE!!" << std::endl;
-            //TODO: LOOSE FUNCTION (Mi ban pti mtacvi)
+    for(int i = 0; i < boardWidth; ++i) {
+        if(table[boardHeight - 3][i].getBlock() && !table[boardHeight - 3][i].getMovement()) {
+            isLose = true;
+        }
     }
 
     auto tempTable = table;

@@ -13,6 +13,7 @@ using matrixOfCube = std::array<arrayOfCube, boardHeight>;
 
 class Board {
 private:
+    bool isLose = false;
     matrixOfCube table;
     void destroyLine(int lineIndex);
 
@@ -27,4 +28,5 @@ public:
     void updatePlayerPosition(int positionX, int positionY);
     std::array<Cube, boardWidth> generateRow();
     matrixOfCube getTable();
+    bool getIsLose();
 };

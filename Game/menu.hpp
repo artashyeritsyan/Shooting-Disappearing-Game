@@ -7,13 +7,6 @@ class Menu {
 private:
     MenuScreen menuScreen;
 
-    const char* buttons[4] = {
-        "Play",
-        "Settings",
-        "Help",
-        "Exit",
-    };
-
 public:
     Menu();
     int menuButtons();
