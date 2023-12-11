@@ -2,6 +2,7 @@
 
 ScoreManager::ScoreManager(){
     score = 0;
+    speed = 1;
     loadScoreFromFile();
 }
 
@@ -23,6 +24,14 @@ int ScoreManager::getScore() {
 void ScoreManager::increaseScore(int score) {
     this->score += score;
     updateHighScore();
+}
+
+int ScoreManager::getSpeed() {
+    return speed;
+}
+
+void ScoreManager::increaseSpeed() {
+    ++speed;
 }
 
 void ScoreManager::saveScoreInFile() {
@@ -49,3 +58,4 @@ void ScoreManager::updateHighScore() {
         saveScoreInFile();
     }
 }
+

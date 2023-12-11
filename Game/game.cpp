@@ -5,9 +5,12 @@ Game::Game() {
     GameScreen screen;
     ScoreManager scoreManager;
 
+    std::chrono::milliseconds rowGenerationTime(gameSpeed - (scoreManager.getSpeed() * speedCoefficient));
+
     rowGenerationStartTime = std::chrono::steady_clock::now();
     bulletMovingStartTime = std::chrono::steady_clock::now();
     shotCooldownStartTime = std::chrono::steady_clock::now();
+    speedUpStartTime = std::chrono::steady_clock::now();
 
     cursorX = boardWidth / 2;
     cursorY = boardHeight - 1;
@@ -25,7 +28,7 @@ void Game::start() {
         board.updatePlayerPosition(cursorX, cursorY);
         
         screen.updateGameWindow(board.getTable());
-        screen.updateScoreDisplay(scoreManager.getScore(), scoreManager.getHighScore());
+        screen.updateScoreDisplay(scoreManager.getScore(), scoreManager.getHighScore(), scoreManager.getSpeed());
     }
 }
 
@@ -68,6 +71,13 @@ void Game::cooldownManager() {
             scoreManager.increaseScore(scoreAmount);
         }
         bulletMovingStartTime = currentTime;
+    }
+
+    if (currentTime - speedUpStartTime >= speedUpTime) {
+        scoreManager.increaseSpeed();
+        speedUpStartTime = currentTime;
+
+        std::chrono::milliseconds rowGenerationTime(gameSpeed - (scoreManager.getSpeed() * speedCoefficient));
     }
 }
 

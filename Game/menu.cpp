@@ -34,7 +34,8 @@ int Menu::menuButtons() {
             return highlight;
         }
     }
-} 
+}
+
 
 void Menu::handleChoice(int choice) {
     Game game;
@@ -42,6 +43,7 @@ void Menu::handleChoice(int choice) {
     {
     case 0:
         game.start();
+        
         // Call Restart screen where will be Restart and MainMenu buttons
         // Call restart function if 1
         // and call menu screen when 0 

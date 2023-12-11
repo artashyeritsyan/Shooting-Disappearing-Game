@@ -16,13 +16,18 @@ private:
     GameScreen screen;
     ScoreManager scoreManager;
     
-    const std::chrono::milliseconds rowGenerationTime{4500};    
-    const std::chrono::milliseconds bulletMovingTime{25};
-    const std::chrono::milliseconds shotCooldownTime{100};
+    int gameSpeed = 4600;
+    int speedCoefficient = 200;
+
+    std::chrono::milliseconds rowGenerationTime{gameSpeed};
+    const std::chrono::milliseconds bulletMovingTime{30};
+    const std::chrono::milliseconds shotCooldownTime{200};
+    const std::chrono::milliseconds speedUpTime{60000};
 
     TimePoint rowGenerationStartTime;
     TimePoint bulletMovingStartTime;
     TimePoint shotCooldownStartTime;
+    TimePoint speedUpStartTime;
 
     int cursorX;
     int cursorY;

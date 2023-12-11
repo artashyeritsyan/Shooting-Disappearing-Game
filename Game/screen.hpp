@@ -27,12 +27,20 @@ private :
     WINDOW *gameWindow;
     WINDOW *scoreWindow;
 
+    const std::string screenTexts[3] = {
+    "SCORE",
+    "HI-SCORE",
+    "SPEED"
+    };
+
+    //TODO: create SPEED logic 
+
 public:
     GameScreen();
     ~GameScreen();
 
     void updateGameWindow(matrixOfCube table);
-    void updateScoreDisplay(int score, int hightScore);
+    void updateScoreDisplay(int score, int hightScore, int speed);
 };
 
 

@@ -31,11 +31,6 @@ GameScreen::GameScreen():Screen() {
     std::cout << gameScreenHeight << std::endl;
     std::cout << scoreScreenHeight << std::endl;
 
-    // if(max_x <= (gameScreenWidth + scoreScreenWidth) || max_y <= (gameScreenHeight + scoreScreenHeight)) {
-    //     std::cout << "screen too small for display game" << std::endl;
-    //    // exit(0);
-    // }
-
     gameWindow = newwin(gameScreenHeight + 2,
                         gameScreenWidth + 2,
                         gameScreenY,
@@ -85,15 +80,22 @@ void GameScreen::updateGameWindow(matrixOfCube table) {
     wrefresh(gameWindow);
 }
 
-void GameScreen::updateScoreDisplay(int score, int hightScore) {
+void GameScreen::updateScoreDisplay(int score, int highScore, int speed) {
     werase(scoreWindow);
     box(scoreWindow, 0, 0);
 
-    mvwprintw(scoreWindow, 1, 1, "  SCORE");
-    mvwprintw(scoreWindow, 2, 1, "   %d", score);
+    int scoreLength = std::to_string(score).length();
+    int highScoreLength = std::to_string(highScore).length();
+    int speedLength = std::to_string(speed).length();
+    
+    mvwprintw(scoreWindow, 2, (scoreScreenWidth - screenTexts[0].length()) / 2 + 1, screenTexts[0].c_str());
+    mvwprintw(scoreWindow, 3, (scoreScreenWidth - scoreLength) / 2 + 1, "%d", score);
 
-    mvwprintw(scoreWindow, 3, 1, " HI-SCORE");
-    mvwprintw(scoreWindow, 4, 1, "   %d", hightScore);
+    mvwprintw(scoreWindow, 5, (scoreScreenWidth - screenTexts[1].length()) / 2 + 1, screenTexts[1].c_str());
+    mvwprintw(scoreWindow, 6, (scoreScreenWidth - highScoreLength) / 2 + 1, "%d", highScore);
+
+    mvwprintw(scoreWindow, 8, (scoreScreenWidth - screenTexts[2].length()) / 2 + 1, screenTexts[2].c_str());
+    mvwprintw(scoreWindow, 9, (scoreScreenWidth - speedLength) / 2 + 1, "%d", speed);
 
     wrefresh(scoreWindow);
 }
@@ -125,18 +127,18 @@ void MenuScreen::updateMenuWindow(int choice) {
 
     int offsetX;
     int offsetY = menuScreenHeight / buttons->length();
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < buttons->length(); i++) {
             wattron(menuWindow, COLOR_PAIR(3));
-        if (i == choice)
-            wattron(menuWindow, A_REVERSE);
 
-        //TODO: Nenc anel vor tpeluc barery sirun dasavorvac inen mejtexy, aysinqn offsety chisht hashvarkel
+        if (i == choice) {
+            wattron(menuWindow, A_REVERSE);
+        }
+
         offsetX = (menuScreenWidth - buttons[i].length()) / 2 + 1;
         mvwprintw(menuWindow, offsetY * (i+1), offsetX, buttons[i].c_str());
 
         wattroff(menuWindow, A_REVERSE);
         wattroff(menuWindow, COLOR_PAIR(3));
-
     }
 
     wrefresh(menuWindow);
