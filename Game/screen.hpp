@@ -45,7 +45,7 @@ public:
     void updateMenuWindow(int choice);
 };
 
-class RestartScreen:Screen { 
+class RestartScreen { 
     const int restartScreenHeight = 10;
     const int restartScreenWidth = 10;
 

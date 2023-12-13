@@ -32,7 +32,8 @@ void Game::start() {
     }
 }
 
-void Game::inputHandling() {
+void Game::inputHandling() { 
+    /// TODO: Implement input in another class and give to Game class only action 
     char inputKey;
     inputKey = getch();
 
