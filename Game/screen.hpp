@@ -1,50 +1,31 @@
-#pragma once
+#ifndef GAME_SCREEN_HPP
+#define GAME_SCREEN_HPP
 
 #include <iostream>
 #include <ncurses.h>
 
 #include "board.hpp"
 
-class Screen
-{
-private:
-public:
-    Screen();
-    ~Screen();
-};
-
-
-class GameScreen:Screen {
-private : 
-    const int gameScreenHeight = 20;
-    const int gameScreenWidth = 20;
-    const int scoreScreenHeight = 20;
-    const int scoreScreenWidth = 10;
-
-    int offsetX = 1;
-    int offsetY = 1;
-
-    WINDOW *gameWindow;
-    WINDOW *scoreWindow;
-
-    const std::string screenTexts[3] = {
-    "SCORE",
-    "HI-SCORE",
-    "SPEED"
-    };
-
-    //TODO: create SPEED logic 
-
+class GameScreen {
 public:
     GameScreen();
     ~GameScreen();
 
     void updateGameWindow(matrixOfCube table);
     void updateScoreDisplay(int score, int hightScore, int speed);
+
+private:
+    void initScreen();
+    void createWindows();
+    std::pair<int, int> computeScreenDims() const;
+
+private:
+    WINDOW *gameWindow;
+    WINDOW *scoreWindow;
 };
 
 
-class MenuScreen:Screen {
+class MenuScreen {
 private:
     const int menuScreenHeight = 9;
     const int menuScreenWidth = 14;
@@ -75,3 +56,5 @@ public:
     ~RestartScreen();
     void updateRestartScreen();
 };
+
+#endif // GAME_SCREEN_HPP

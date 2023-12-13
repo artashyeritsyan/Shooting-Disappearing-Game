@@ -77,7 +77,7 @@ void Game::cooldownManager() {
         scoreManager.increaseSpeed();
         speedUpStartTime = currentTime;
 
-        std::chrono::milliseconds rowGenerationTime(gameSpeed - (scoreManager.getSpeed() * speedCoefficient));
+        rowGenerationTime = std::chrono::milliseconds{gameSpeed - (scoreManager.getSpeed() * speedCoefficient)};
     }
 }
 
