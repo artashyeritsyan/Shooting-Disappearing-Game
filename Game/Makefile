@@ -1,24 +1,25 @@
-# Makefile for your project
-
-CXX = g++
-CXXFLAGS = -std=c++11 -Wall
+CC = g++
+CFLAGS = # -Wall -Wextra
 LDFLAGS = -lncurses
 
-SRCS = main.cpp cube.cpp board.cpp game.cpp screen.cpp
-OBJS = $(SRCS:.cpp=.o)
-HEADERS = cube.hpp board.hpp game.hpp screen.hpp
+SRC_DIR = src
+HDR_DIR = headers
+OBJ_DIR = obj
 
-TARGET = my_game
+SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
+HDR_FILES = $(wildcard $(HDR_DIR)/*.hpp)
+OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC_FILES))
+EXECUTABLE = Shooting_Disappearing
 
-.PHONY: all clean
+all: $(EXECUTABLE)
 
-all: $(TARGET)
+$(EXECUTABLE): $(OBJ_FILES)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
-
-%.o: %.cpp $(HEADERS)
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CC) $(CFLAGS) -c -o $@ $< -I$(HDR_DIR)
 
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJ_DIR)/*.o $(EXECUTABLE)
+
+.PHONY: all clean
