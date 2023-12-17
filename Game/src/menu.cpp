@@ -11,6 +11,7 @@ Menu::Menu() {
 
 int Menu::menuButtons(Input input) {
     int highlight = 0;
+    int buttonsCount = 4;
 
     while (true) {
         menuScreen.updateMenuWindow(highlight);
@@ -24,7 +25,7 @@ int Menu::menuButtons(Input input) {
             break;
 
         case down:            
-            if (highlight < 3) {
+            if (highlight < buttonsCount - 1) {
                 ++highlight;
             }
             break;
