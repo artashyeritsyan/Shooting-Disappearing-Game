@@ -1,41 +1,39 @@
 #include "menu.hpp"
 
 Menu::Menu() {
-
+    Input input;
     while (true)
     {
-        handleChoice(menuButtons());
+        input.inputHandling();
+        handleChoice(menuButtons(input));
     }
 }
 
-int Menu::menuButtons() {
-    int choice;
+int Menu::menuButtons(Input input) {
     int highlight = 0;
 
     while (true) {
         menuScreen.updateMenuWindow(highlight);
-        choice = getch();
         
-        switch (choice) 
+        switch (input.inputHandling()) 
         {
-        case 'w':
+        case up:
             if (highlight > 0) {
                 --highlight;
             }
             break;
 
-        case 's':            
+        case down:            
             if (highlight < 3) {
                 ++highlight;
             }
             break;
 
-        case 10:
+        case enter:
             return highlight;
         }
     }
 }
-
 
 void Menu::handleChoice(int choice) {
     Game game;
@@ -58,6 +56,7 @@ void Menu::handleChoice(int choice) {
         break;
 
     case Exit:
+        std::exit(1);
         break;
 
     default:

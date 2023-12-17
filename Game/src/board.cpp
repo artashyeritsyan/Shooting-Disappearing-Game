@@ -4,24 +4,16 @@ Board::Board() {
     table[0] = generateRow();    
 }
 
-Board::~Board() {
-
-}
-
 matrixOfCube Board::getTable() {
     return table;
-}
-
-bool Board::getIsLose() {
-    return isLose;
 }
 
 arrayOfCube Board::generateRow() {
     srand(time(NULL));
     arrayOfCube randomFilledRow;
 
-    int minRange = boardWidth / 3;
-    int maxRange = boardWidth / 3 * 2;
+    int minRange = BOARD_WIDTH / 3;
+    int maxRange = BOARD_WIDTH / 3 * 2;
     int pixelsCount = (rand() % (maxRange - minRange + 1)) + minRange;
     
     int position;
@@ -29,7 +21,7 @@ arrayOfCube Board::generateRow() {
     {
         do
         {
-            position = rand() % boardWidth;
+            position = rand() % BOARD_WIDTH;
         } while (randomFilledRow[position].getBlock() == true);
         randomFilledRow[position].setBlock(true);
     }
@@ -37,22 +29,24 @@ arrayOfCube Board::generateRow() {
     return randomFilledRow;
 }
 
-void Board::addNewLine() {
-    
-    for(int i = 0; i < boardWidth; ++i) {
-        if(table[boardHeight - 3][i].getBlock() && !table[boardHeight - 3][i].getMovement()) {
-            isLose = true;
+bool Board::checkLossStatus() {
+    for(int i = 0; i < BOARD_WIDTH; ++i) {
+        if(table[BOARD_HEIGHT - 3][i].getBlock() && !table[BOARD_HEIGHT - 3][i].getMovement()) {
+            return true;
         }
     }
+    return false;
+}
 
+void Board::addNewLine() {
     auto tempTable = table;
 
-    int startRow = boardHeight - 3;
+    int startRow = BOARD_HEIGHT - 3;
     int endRow = 0;
     
     while (startRow > endRow)
     {
-        for (int i = 0; i < boardWidth; ++i)
+        for (int i = 0; i < BOARD_WIDTH; ++i)
         {
             table[startRow][i] = tempTable[startRow - 1][i];
         }
@@ -60,7 +54,7 @@ void Board::addNewLine() {
     }
 
     auto generatedRow = generateRow();
-    for (int i = 0; i < boardWidth; ++i)
+    for (int i = 0; i < BOARD_WIDTH; ++i)
     {
         table[0][i] = generatedRow[i];
         table[0][i].setMovement(false);
@@ -68,16 +62,18 @@ void Board::addNewLine() {
 }
 
 void Board::shoot(int cursorX) {
-    int bulletIndexY = boardHeight - 3;
+    int bulletIndexY = BOARD_HEIGHT - 3;
     const int bulletIndexX = cursorX;
 
-    table[bulletIndexY][bulletIndexX].setMovement(true);
-    table[bulletIndexY][bulletIndexX].setBlock(true);
+    if(!table[bulletIndexY][bulletIndexX].getBlock()){
+        table[bulletIndexY][bulletIndexX].setMovement(true);
+        table[bulletIndexY][bulletIndexX].setBlock(true);
+    }
 }
 
 void Board::updatePlayerPosition(int positionX, int positionY) {
-    for (int i = boardHeight - 2; i < boardHeight; ++i) {
-        for (int j = 0; j < boardWidth; ++j) {
+    for (int i = BOARD_HEIGHT - 2; i < BOARD_HEIGHT; ++i) {
+        for (int j = 0; j < BOARD_WIDTH; ++j) {
             table[i][j].setBlock(false);
         }
     }
@@ -85,16 +81,16 @@ void Board::updatePlayerPosition(int positionX, int positionY) {
     table[positionY][positionX].setBlock(true);
     table[positionY - 1][positionX].setBlock(true);
 
-    if (positionX != boardWidth - 1)
+    if (positionX != BOARD_WIDTH - 1)
         table[positionY][positionX + 1].setBlock(true);
     if (positionX != 0)
         table[positionY][positionX - 1].setBlock(true);
 }
 
 void Board::moveBulletsUp() {
-    for (int i = 0; i < boardHeight - 2; ++i)
+    for (int i = 0; i < BOARD_HEIGHT - 2; ++i)
     {
-        for (int j = 0; j < boardWidth; ++j)
+        for (int j = 0; j < BOARD_WIDTH; ++j)
         {
             if (table[i][j].getMovement())
             {
@@ -121,10 +117,10 @@ void Board::moveBulletsUp() {
 }
 
 bool Board::checkToDestroyLine() {
-    for (int i = 0; i < boardHeight; ++i)
+    for (int i = 0; i < BOARD_HEIGHT; ++i)
     {   
         bool isLineFull = true;
-        for (int j = 0; j < boardWidth; ++j)
+        for (int j = 0; j < BOARD_WIDTH; ++j)
         {
             if (!table[i][j].getBlock() || table[i][j].getMovement()) {
                 isLineFull = false;
@@ -142,24 +138,20 @@ bool Board::checkToDestroyLine() {
 
 void Board::destroyLine(int lineIndex) {
     auto tempTable = table;
-    ///
-    // for(int i = 0; i < boardWidth; ++i) {
-    //     table[10][i].setBlock(true);
-    // }
 
     int startRow = lineIndex;
-    int endRow = boardHeight - 3;
+    int endRow = BOARD_HEIGHT - 3;
 
     while (startRow < endRow)
     {
-        for (int i = 0; i < boardWidth; ++i)
+        for (int i = 0; i < BOARD_WIDTH; ++i)
         {
             table[startRow][i] = tempTable[startRow + 1][i];
         }
         ++startRow;
     }
 
-    for(int i = 0; i < boardWidth; ++i) {
+    for(int i = 0; i < BOARD_WIDTH; ++i) {
         table[endRow][i].setBlock(false);
         table[endRow][i].setMovement(false);
     }

@@ -2,6 +2,7 @@
 #define MENU_HPP
 
 #include "game.hpp"
+#include "input.hpp"
 #include "screen.hpp"
 
 class Menu {
@@ -10,9 +11,8 @@ private:
 
 public:
     Menu();
-    int menuButtons();
+    int menuButtons(Input input);
     void handleChoice(int choice);
-
 
     enum MenuOption {
         Play,

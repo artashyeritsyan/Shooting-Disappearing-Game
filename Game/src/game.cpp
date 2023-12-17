@@ -1,28 +1,47 @@
 #include "game.hpp"
 
+namespace {
+
+const int SCORE_AMOUNT = 100; 
+
+//time in milliseconds
+const int GAME_SPEED = 4500;
+const int SPEED_COEFFICIENT = 300;
+
+std::chrono::milliseconds rowGenerationTime{GAME_SPEED};
+
+const std::chrono::milliseconds BULLET_MUVING_TIME{25};
+const std::chrono::milliseconds SHOT_COOLDOWN_TIME{160};
+const std::chrono::milliseconds GAME_SPEED_UP_TIME{20000};
+
+TimePoint rowGenerationStartTime;
+TimePoint bulletMovingStartTime;
+TimePoint shotCooldownStartTime;
+TimePoint speedUpStartTime;
+
+} // unnamed namespace
+
 Game::Game() {
     Board board;
     GameScreen screen;
     ScoreManager scoreManager;
 
-    std::chrono::milliseconds rowGenerationTime(gameSpeed - (scoreManager.getSpeed() * speedCoefficient));
+    lossStatus = false;
 
     rowGenerationStartTime = std::chrono::steady_clock::now();
     bulletMovingStartTime = std::chrono::steady_clock::now();
     shotCooldownStartTime = std::chrono::steady_clock::now();
     speedUpStartTime = std::chrono::steady_clock::now();
 
-    cursorX = boardWidth / 2;
-    cursorY = boardHeight - 1;
-}
-
-Game::~Game() {
-
+    cursorX = BOARD_WIDTH / 2;
+    cursorY = BOARD_HEIGHT - 1;
 }
 
 void Game::start() {
-    while (!board.getIsLose()) {
-        inputHandling();
+    Input input;
+
+    while (!lossStatus) {
+        inputActions(input.inputHandling());
         cooldownManager();
 
         board.updatePlayerPosition(cursorX, cursorY);
@@ -32,28 +51,22 @@ void Game::start() {
     }
 }
 
-void Game::inputHandling() { 
-    /// TODO: Implement input in another class and give to Game class only action 
-    char inputKey;
-    inputKey = getch();
-
-    switch (inputKey)
+void Game::inputActions(EControls action) { 
+    switch (action)
     {
-    case 'a':  //TODO: implement this input with KEY_LEFT, and etc.
+    case left:
         if (cursorX > 0)
            --cursorX;
         break;
-    case 'd':
-        if (cursorX < boardWidth - 1)
+    case right:
+        if (cursorX < BOARD_WIDTH - 1)
             ++cursorX;
         break;
-    case 'w':
-    case ' ':
+    case up:
             shootManager();
         break;
-    case 'q':
-    case 'Q':
-        //TODO: create logic to end game
+    case quit:
+        lossStatus = true;
         break;
     }
 }
@@ -62,30 +75,36 @@ void Game::cooldownManager() {
     auto currentTime = std::chrono::steady_clock::now();
     
     if (currentTime - rowGenerationStartTime >= rowGenerationTime) {
-        board.addNewLine();
+        if(!board.checkLossStatus()) {
+            board.addNewLine();
+        }
+        else {
+            lossStatus = true;
+        }
         rowGenerationStartTime = currentTime;
     }
 
-    if (currentTime - bulletMovingStartTime >= bulletMovingTime) {
+    if (currentTime - bulletMovingStartTime >= BULLET_MUVING_TIME) {
         board.moveBulletsUp();
+
         if (board.checkToDestroyLine()) {
-            scoreManager.increaseScore(scoreAmount);
+            scoreManager.increaseScore(SCORE_AMOUNT);
         }
         bulletMovingStartTime = currentTime;
     }
 
-    if (currentTime - speedUpStartTime >= speedUpTime) {
+    if (currentTime - speedUpStartTime >= GAME_SPEED_UP_TIME) {
         scoreManager.increaseSpeed();
         speedUpStartTime = currentTime;
 
-        rowGenerationTime = std::chrono::milliseconds{gameSpeed - (scoreManager.getSpeed() * speedCoefficient)};
+        rowGenerationTime = std::chrono::milliseconds{GAME_SPEED - (scoreManager.getSpeed() * SPEED_COEFFICIENT)};
     }
 }
 
 void Game::shootManager() {
     auto currentTime = std::chrono::steady_clock::now();
 
-    if (currentTime - shotCooldownStartTime >= shotCooldownTime) {
+    if (currentTime - shotCooldownStartTime >= SHOT_COOLDOWN_TIME) {
         shotCooldownStartTime = currentTime;
 
         board.shoot(cursorX);

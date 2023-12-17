@@ -6,30 +6,28 @@
 
 #include "cube.hpp"
 
-static const int boardHeight = 20;
-static const int boardWidth = 10;
+const int BOARD_HEIGHT = 20;
+const int BOARD_WIDTH = 10;
 
-using arrayOfCube = std::array<Cube, boardWidth>;
-using matrixOfCube = std::array<arrayOfCube, boardHeight>;
+using arrayOfCube = std::array<Cube, BOARD_WIDTH>;
+using matrixOfCube = std::array<arrayOfCube, BOARD_HEIGHT>;
 
 class Board {
-private:
-    bool isLose = false;
-    matrixOfCube table;
-    void destroyLine(int lineIndex);
-
 public:
     Board();
-    ~Board();
     void shoot(int cursorX);
     void moveBulletsUp();
     bool checkToDestroyLine();
     void addNewLine();
     void destructionAnimation(int lineIndex);
     void updatePlayerPosition(int positionX, int positionY);
-    std::array<Cube, boardWidth> generateRow();
+    arrayOfCube generateRow();
     matrixOfCube getTable();
-    bool getIsLose();
+    bool checkLossStatus();
+
+private:
+    matrixOfCube table;
+    void destroyLine(int lineIndex);
 };
 
 #endif // BOARD_HPP

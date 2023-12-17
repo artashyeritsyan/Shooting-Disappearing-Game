@@ -6,15 +6,6 @@ Cube::Cube()
     this->isMoving = false;
 }
 
-Cube::Cube(bool isBullet) {
-    this->isBlock = true;
-    this->isMoving = true;
-}
-
-Cube::~Cube() {
-
-}
-
 bool Cube::getBlock() {
     return this->isBlock;
 }
