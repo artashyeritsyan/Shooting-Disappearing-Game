@@ -7,15 +7,6 @@
 
 class Input {
 public:
-
-    // enum EControls {
-    //     up,
-    //     down,
-    //     left,
-    //     right,
-    //     exit
-    // };
-
     EControls inputHandling();
 };
 

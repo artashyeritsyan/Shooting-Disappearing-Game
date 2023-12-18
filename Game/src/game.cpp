@@ -9,7 +9,6 @@ const int GAME_SPEED = 4500;
 const int SPEED_COEFFICIENT = 300;
 
 std::chrono::milliseconds rowGenerationTime{GAME_SPEED};
-
 const std::chrono::milliseconds BULLET_MUVING_TIME{25};
 const std::chrono::milliseconds SHOT_COOLDOWN_TIME{160};
 const std::chrono::milliseconds GAME_SPEED_UP_TIME{20000};

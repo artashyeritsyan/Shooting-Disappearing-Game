@@ -18,12 +18,9 @@ public:
 
     void loadScoreFromFile();
     void saveScoreInFile();
-
     int getHighScore();
-
     int getScore();
     void increaseScore(int score);
-
     int getSpeed();
     void increaseSpeed();
 };

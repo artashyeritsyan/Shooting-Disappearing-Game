@@ -22,7 +22,6 @@ const std::string buttons[4] = {
     "Exit",
 };
 
-
 inline std::pair<int, int> getScreenMaxDims() {
     int max_x;
     int max_y;
@@ -52,7 +51,6 @@ WINDOW *initializeWindow(int screenSize_y, int screenSize_x,
 
 } // unnamed namepace
 
-
 GameScreen::GameScreen() {
     initScreen();
     createGameWindow();
@@ -70,7 +68,6 @@ void GameScreen::createGameWindow() {
                                    SCORE_SCREEN_WIDTH + 2,
                                    gameScreenY,
                                    gameScreenX + GAME_SCREEN_WIDTH + 2);
-
 }
 
 std::pair<int, int> GameScreen::computeScreenDims() const {

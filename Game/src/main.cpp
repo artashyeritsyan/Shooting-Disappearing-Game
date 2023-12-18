@@ -14,6 +14,3 @@ int main() {
 
     return 0;
 }
-
-//for compile code
-//g++ main.cpp cube.cpp board.cpp game.cpp screen.cpp scoreManager.cpp menu.cpp cube.hpp board.hpp game.hpp screen.hpp scoreManager.hpp menu.hpp -lncurses
