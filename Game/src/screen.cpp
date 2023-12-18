@@ -44,27 +44,33 @@ void initScreen() {
     init_pair(3, COLOR_YELLOW, COLOR_BLACK);
 }
 
+WINDOW *initializeWindow(int screenSize_y, int screenSize_x,
+                         int screenPos_y,  int screenPos_x) {
+
+    return newwin(screenSize_y, screenSize_x, screenPos_y, screenPos_x);
+}
 
 } // unnamed namepace
 
 
 GameScreen::GameScreen() {
     initScreen();
-    createWindows();
+    createGameWindow();
 }
 
-void GameScreen::createWindows() {
+void GameScreen::createGameWindow() {
     const auto [gameScreenX, gameScreenY] = computeScreenDims();
-    gameWindow = newwin(GAME_SCREEN_HEIGHT + 2,
-                        GAME_SCREEN_WIDTH + 2,
-                        gameScreenY,
-                        gameScreenX);
-    scoreWindow = newwin(SCORE_SCREEN_HEIGHT + 2,
-                         SCORE_SCREEN_WIDTH + 2,
-                         gameScreenY,
-                         gameScreenX + GAME_SCREEN_WIDTH + 2);
-    box(scoreWindow, 0, 0);
-    refresh();
+
+    gameWindow = initializeWindow(GAME_SCREEN_HEIGHT + 2,
+                                  GAME_SCREEN_WIDTH + 2,
+                                  gameScreenY,
+                                  gameScreenX);
+
+    scoreWindow = initializeWindow(SCORE_SCREEN_HEIGHT + 2,
+                                   SCORE_SCREEN_WIDTH + 2,
+                                   gameScreenY,
+                                   gameScreenX + GAME_SCREEN_WIDTH + 2);
+
 }
 
 std::pair<int, int> GameScreen::computeScreenDims() const {
@@ -86,23 +92,19 @@ void GameScreen::updateGameWindow(matrixOfCube table) {
     werase(gameWindow);
     box(gameWindow, 0, 0);
 
+    int colorNumber = 2;
+
     for (int row = 0; row < GAME_SCREEN_HEIGHT; ++row) 
     {
         for (int col = 0; col < GAME_SCREEN_WIDTH; col += 2) 
         {
-            //TODO: fix this line "col / 2" part, create another logic
+            colorNumber = 2;
             if (table[row][col / 2].getBlock()) {
-                wattron(gameWindow, COLOR_PAIR(1));
-                mvwaddch(gameWindow, OFFSET_Y + row, OFFSET_X + col, ' ');
-                mvwaddch(gameWindow, OFFSET_Y + row, OFFSET_X + col + 1, ' ');
-                wattroff(gameWindow, COLOR_PAIR(1));
+                colorNumber = 1;
             }
-            else {
-                wattron(gameWindow, COLOR_PAIR(2));
-                mvwaddch(gameWindow, OFFSET_Y + row, OFFSET_X + col, ' ');
-                mvwaddch(gameWindow, OFFSET_Y + row, OFFSET_X + col + 1, ' ');
-                wattroff(gameWindow, COLOR_PAIR(2));
-            }
+            wattron(gameWindow, COLOR_PAIR(colorNumber));
+            mvwprintw(gameWindow, OFFSET_Y + row, OFFSET_X + col, "  ");
+            wattroff(gameWindow, COLOR_PAIR(colorNumber));
         }
     }
 
@@ -113,23 +115,21 @@ void GameScreen::updateScoreDisplay(int score, int highScore, int speed) {
     werase(scoreWindow);
     box(scoreWindow, 0, 0);
 
-    int scoreLength = std::to_string(score).length();
-    int highScoreLength = std::to_string(highScore).length();
-    int speedLength = std::to_string(speed).length();
+    int parametersCount = 3;
+    int offset = 3;
+
+    printScoreDisplay(2, 0, score);
+    printScoreDisplay(5, 1, highScore);
+    printScoreDisplay(8, 2, speed);
     
-    mvwprintw(scoreWindow, 2, (SCORE_SCREEN_WIDTH - screenTexts[0].length()) / 2 + 1, screenTexts[0].c_str());
-    mvwprintw(scoreWindow, 3, (SCORE_SCREEN_WIDTH - scoreLength) / 2 + 1, "%d", score);
-
-    mvwprintw(scoreWindow, 5, (SCORE_SCREEN_WIDTH - screenTexts[1].length()) / 2 + 1, screenTexts[1].c_str());
-    mvwprintw(scoreWindow, 6, (SCORE_SCREEN_WIDTH - highScoreLength) / 2 + 1, "%d", highScore);
-
-    mvwprintw(scoreWindow, 8, (SCORE_SCREEN_WIDTH - screenTexts[2].length()) / 2 + 1, screenTexts[2].c_str());
-    mvwprintw(scoreWindow, 9, (SCORE_SCREEN_WIDTH - speedLength) / 2 + 1, "%d", speed);
-
     wrefresh(scoreWindow);
 }
 
-
+void GameScreen::printScoreDisplay(int offsetY, int textIndex, int value) {
+    int valueLength = std::to_string(value).length();
+    mvwprintw(scoreWindow, offsetY, (SCORE_SCREEN_WIDTH - screenTexts[textIndex].length()) / 2 + 1, screenTexts[textIndex].c_str());
+    mvwprintw(scoreWindow, offsetY + 1, (SCORE_SCREEN_WIDTH - valueLength) / 2 + 1, "%d", value);
+}
 
 MenuScreen::MenuScreen() {
     initScreen();
@@ -138,12 +138,10 @@ MenuScreen::MenuScreen() {
     int max_y;
     getmaxyx(stdscr, max_y, max_x);
 
-    menuWindow = newwin(menuScreenHeight + 2,
-                        menuScreenWidth + 2,
-                        max_y/2 - (menuScreenHeight + 2)/2,
-                        max_x/2 - (menuScreenWidth + 2)/2);
-    
-    box(menuWindow, 0, 0);
+    menuWindow = initializeWindow(menuScreenHeight + 2,
+                                 menuScreenWidth + 2,
+                                 max_y/2 - (menuScreenHeight + 2)/2,
+                                 max_x/2 - (menuScreenWidth + 2)/2);    
 }
 
 MenuScreen::~MenuScreen()
