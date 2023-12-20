@@ -6,8 +6,7 @@
 #include "screen.hpp"
 
 class Menu {
-private:
-    MenuScreen menuScreen;
+
 
 public:
     Menu();
@@ -20,6 +19,9 @@ public:
         Help,
         Exit
     };
+
+private:
+    MenuScreen menuScreen;
 };
 
 #endif // MENU_HPP

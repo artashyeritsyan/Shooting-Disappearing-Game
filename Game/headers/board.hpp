@@ -19,7 +19,6 @@ public:
     void moveBulletsUp();
     bool checkToDestroyLine();
     void addNewLine();
-    void destructionAnimation(int lineIndex);
     void updatePlayerPosition(int positionX, int positionY);
     arrayOfCube generateRow();
     matrixOfCube getTable();

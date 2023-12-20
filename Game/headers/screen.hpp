@@ -15,7 +15,6 @@ public:
     void updateScoreDisplay(int score, int hightScore, int speed);
 
 private:
-    // void initScreen();
     void createGameWindow();
     std::pair<int, int> computeScreenDims() const;
     void printScoreDisplay(int offsetY, int textIndex, int value);
@@ -31,9 +30,9 @@ public:
     MenuScreen();
     ~MenuScreen();
     void updateMenuWindow(int choice);
+    void showHelpWindow();
 
 private:
-
     const int menuScreenHeight = 9;
     const int menuScreenWidth = 14;
 

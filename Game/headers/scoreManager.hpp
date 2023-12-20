@@ -5,13 +5,6 @@
 #include <fstream>
 
 class ScoreManager {
-private:
-    static int highScore;
-    int score;
-    int speed;
-
-    void updateHighScore();
-
 public:
     ScoreManager();
     ~ScoreManager();
@@ -23,6 +16,14 @@ public:
     void increaseScore(int score);
     int getSpeed();
     void increaseSpeed();
+
+private:
+    void updateHighScore();
+
+    int highScore;
+    int score;
+    int speed;
+
 };
 
 #endif // SCORE_MANAGER_HPP

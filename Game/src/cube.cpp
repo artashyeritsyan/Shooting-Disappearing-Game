@@ -10,13 +10,14 @@ bool Cube::getBlock() {
     return this->isBlock;
 }
 
+void Cube::setBlock(bool isBlock) {
+    this->isBlock = isBlock;
+}
+
 bool Cube::getMovement() {
     return this->isMoving;
 }
 
-void Cube::setBlock(bool isBlock) {
-    this->isBlock = isBlock;
-}
 
 void Cube::setMovement(bool isMoving) {
     this->isMoving = isMoving;

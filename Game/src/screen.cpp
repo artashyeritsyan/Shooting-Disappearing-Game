@@ -169,3 +169,18 @@ void MenuScreen::updateMenuWindow(int choice) {
 
     wrefresh(menuWindow);
 }
+
+void MenuScreen::showHelpWindow() {
+    werase(menuWindow);
+    box(menuWindow, 0, 0);
+
+    mvwprintw(menuWindow, 4, 2, "Controls");
+    mvwprintw(menuWindow, 6, 2, "right = ->");
+    mvwprintw(menuWindow, 8, 0, "right = <-");
+    mvwprintw(menuWindow, 10, 0, "shoot = 'space'");
+    werase(menuWindow);
+
+    nodelay(stdscr, FALSE);
+    int a = getch();
+    nodelay(stdscr, TRUE);
+}

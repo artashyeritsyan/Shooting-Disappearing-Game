@@ -155,10 +155,4 @@ void Board::destroyLine(int lineIndex) {
         table[endRow][i].setBlock(false);
         table[endRow][i].setMovement(false);
     }
-
-    destructionAnimation(lineIndex);
-}
-
-void Board::destructionAnimation(int lineIndex) {
-    //TODO: create destrucion animation for line
 }

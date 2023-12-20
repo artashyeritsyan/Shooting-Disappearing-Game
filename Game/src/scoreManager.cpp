@@ -11,8 +11,6 @@ ScoreManager::~ScoreManager(){
     saveScoreInFile();
 }
 
-int ScoreManager::highScore = 0;
-
 int ScoreManager::getHighScore() {
     return highScore;
 }
@@ -35,8 +33,7 @@ void ScoreManager::increaseSpeed() {
 }
 
 void ScoreManager::saveScoreInFile() {
-    std::ofstream file("data/scores.txt", std::ios::out);
-    
+    std::ofstream file("data/high_score.txt", std::ios::out);
 
     if (file.is_open()) {
         file << highScore << std::endl;
@@ -45,11 +42,16 @@ void ScoreManager::saveScoreInFile() {
 }
 
 void ScoreManager::loadScoreFromFile() {
-    std::ifstream file("data/scores.txt");
+    std::ifstream file("data/high_score.txt");
+    int value = 0;
 
     if (file.is_open()) {
-        file >> highScore;
+        file >> value;
         file.close();
+    }
+
+    if(value){
+        highScore = value;
     }
 }
 

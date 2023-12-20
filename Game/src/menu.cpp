@@ -53,7 +53,7 @@ void Menu::handleChoice(int choice) {
         break;
 
     case Help:
-
+        // menuScreen.showHelpWindow();
         break;
 
     case Exit:

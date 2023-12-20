@@ -29,7 +29,6 @@ private:
     bool lossStatus;
     int cursorX;
     int cursorY;
-
 };
 
 #endif // GAME_HPP
