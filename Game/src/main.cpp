@@ -6,11 +6,7 @@
 #include "screen.hpp"
 #include "menu.hpp"
 
-int main() {
-    // Search TODO and add features :)
-    
+int main() {    
     Menu menu;
-
-
     return 0;
 }

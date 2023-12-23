@@ -58,5 +58,6 @@
             "binaryPath": "/home/artash/MyRepo/Shooting-Disappearing-Game/output/Shooting_Disappearing",
             "binaryArgs": []
         }
-    ]
+    ],
+    "C_Cpp.errorSquiggles": "disabled"
 }

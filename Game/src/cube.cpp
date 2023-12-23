@@ -18,7 +18,6 @@ bool Cube::getMovement() {
     return this->isMoving;
 }
 
-
 void Cube::setMovement(bool isMoving) {
     this->isMoving = isMoving;
 }

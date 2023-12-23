@@ -10,9 +10,6 @@
 #include "screen.hpp"
 #include "scoreManager.hpp"
 
-using SteadyClock = std::chrono::steady_clock;
-using TimePoint = std::chrono::time_point<SteadyClock>; 
-
 class Game {
 public:
     Game();

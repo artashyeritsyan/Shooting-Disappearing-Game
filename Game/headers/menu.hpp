@@ -6,8 +6,6 @@
 #include "screen.hpp"
 
 class Menu {
-
-
 public:
     Menu();
     int menuButtons(Input input);

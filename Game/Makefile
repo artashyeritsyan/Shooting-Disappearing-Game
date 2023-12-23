@@ -1,5 +1,4 @@
 CC = g++
-CFLAGS = # -Wall -Wextra
 LDFLAGS = -lncurses
 
 SRC_DIR = src
@@ -17,7 +16,7 @@ $(EXECUTABLE): $(OBJ_FILES)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CC) $(CFLAGS) -c -o $@ $< -I$(HDR_DIR)
+	$(CC) -c -o $@ $< -I$(HDR_DIR)
 
 clean:
 	rm -f $(OBJ_DIR)/*.o $(EXECUTABLE)

@@ -39,18 +39,4 @@ private:
     WINDOW *menuWindow;
 };
 
-class RestartScreen { 
-
-public:
-    RestartScreen();
-    ~RestartScreen();
-    void updateRestartScreen();
-
-private:
-    const int restartScreenHeight = 10;
-    const int restartScreenWidth = 10;
-
-    WINDOW *restartWindow;
-};
-
 #endif // GAME_SCREEN_HPP
