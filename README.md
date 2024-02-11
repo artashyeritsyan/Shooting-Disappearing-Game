@@ -1,4 +1,4 @@
-# Shooting Disappearing Game
+# Shooting & Disappearing
 
 This project is a game inspired by classic retro games. You will control a character, shooting into empty space to fill horizontal lines and earn points.
 
