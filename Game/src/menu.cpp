@@ -42,10 +42,6 @@ void Menu::handleChoice(int choice) {
     {
     case Play:
         game.start();
-        
-        // Call Restart screen where will be Restart and MainMenu buttons
-        // Call restart function if 1
-        // and call menu screen when 0 
         break;
 
     case Settings:            
@@ -53,7 +49,7 @@ void Menu::handleChoice(int choice) {
         break;
 
     case Help:
-        // menuScreen.showHelpWindow();
+    
         break;
 
     case Exit:

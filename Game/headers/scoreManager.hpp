@@ -23,7 +23,6 @@ private:
     int highScore;
     int score;
     int speed;
-
 };
 
 #endif // SCORE_MANAGER_HPP

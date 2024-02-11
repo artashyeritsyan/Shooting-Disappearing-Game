@@ -1,5 +1,8 @@
 #include "game.hpp"
 
+using SteadyClock = std::chrono::steady_clock;
+using TimePoint = std::chrono::time_point<SteadyClock>; 
+
 namespace {
 
 const int SCORE_AMOUNT = 100; 
